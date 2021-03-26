@@ -1,4 +1,5 @@
-from website.models import Company_Profile,Job_Seeker_Profile
+from .models import Company_Profile,Job_Seeker_Profile
+
 
 def user_type(request):
     user = request.user
