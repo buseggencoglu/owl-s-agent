@@ -1,0 +1,44 @@
+{% extends 'website/base.html' %}
+{% block title %}
+Owls Agent Contact Page
+{% endblock %}
+
+{% load static %}
+{% block content %}
+<br><br>
+<div class="container h-50">
+    <div class="d-flex justify-content-center h-100">
+        <div class="col-md-6 text-center">
+            <div class="card mb-4">
+                <div class="card-header">
+                    Login to Your Account
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" name="username" placeholder="Username..." class="form-control">
+                        </div>
+                        <div class="input-group mb-2">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input type="password" name="password" placeholder="Password..." class="form-control">
+                        </div>
+                        <button type="submit" id="login-page-button" class="btn btn-primary">JOIN</button>
+                    </form>
+                    <a href="#forgot_password" style="color:#0b2e13">Forgot Password ?</a>
+                </div>
+
+                {% for message in messages %}
+                <p id="messages">{{message}}</p>
+                {% endfor %}
+            </div>
+            <h5>If you dont have a account <a href="#register"><strong>join us</strong></a></h5>
+        </div>
+    </div>
+</div>
+{% endblock %}

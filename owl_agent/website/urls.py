@@ -14,4 +14,6 @@ urlpatterns = [
     path('blog/', views.blog_view, name='blog'),
     path('blog/single/', views.single_blog_view, name='single-blog'),
     path('elements/', views.elements_view, name='elements'),
+    path('login/', views.login_view, name='login'),
+    path('logout/', views.logout_view, name='logout'),
 ]

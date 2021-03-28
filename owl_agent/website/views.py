@@ -1,9 +1,11 @@
+from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
 from django.contrib.auth.models import User
 from .forms import Job_Seeker_RegisterForm, RoleChooseForm, Company_RegisterForm
 from .models import Job_Seeker_Profile, Company_Profile
 from datetime import date
+from django.contrib import messages
 
 from django.contrib.auth import (
     authenticate,
@@ -12,8 +14,9 @@ from django.contrib.auth import (
     get_user_model,
 )
 
-# Create your views here.
 
+# Create your views here.
+# @login_required(login_url='login')
 def home_view(request):
     return render(request, 'website/index.html')
 
@@ -118,7 +121,7 @@ def register_Company(request):
                     'form': form,
                     'error_message': 'Username already exists.'
                 })
-            if (form.cleaned_data['foundation_year']) >= date.today()  :
+            if (form.cleaned_data['foundation_year']) >= date.today():
                 return render(request, template, {
                     'form': form,
                     'error_message': 'The foundation year cant be in future'
@@ -146,3 +149,28 @@ def register_Company(request):
 
 def activation_sent_view(request):
     return render(request, 'website/activation_sent.html')
+
+
+def login_view(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+    else:
+        if request.method == 'POST':
+            username = request.POST.get('username')
+            password = request.POST.get('password')
+
+            user = authenticate(request, username=username, password=password)
+
+            if user is not None:
+                login(request, user)
+                return redirect('home')
+            else:
+                messages.error(request, 'Username OR password is incorrect')
+
+        context = {}
+        return render(request, 'website/login.html', context)
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('home')
