@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect
@@ -48,6 +50,7 @@ def single_blog_view(request):
 def elements_view(request):
     return render(request, 'website/elements.html')
 
+
 def admin_dashboard(request):
     context = {}
     user = request.user
@@ -56,18 +59,21 @@ def admin_dashboard(request):
 
     return render(request, 'website/dashboard.html', context)
 
-def approve_companies(request,pk):
+
+def approve_companies(request, pk):
     company = Company_Profile.objects.get(id=pk)
     company.user.is_active = True
     company.user.save()
 
     return HttpResponseRedirect('/dashboard')
 
-def reject_companies(request,pk):
+
+def reject_companies(request, pk):
     company = Company_Profile.objects.get(id=pk)
     company.user.delete()
 
     return HttpResponseRedirect('/dashboard')
+
 
 def role_choose(request):
     template = 'website/role_choose.html'
@@ -91,37 +97,43 @@ def register_Job_Seeker(request):
     template = 'website/register_Job_Seeker.html'
 
     if request.method == "POST":
-        form = Job_Seeker_RegisterForm(request.POST)
-        if form.is_valid():
+        username = request.POST.get('username')
+        email = request.POST['email']
+        first_name = request.POST.get('first_name')
+        surname = request.POST.get('surname')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        birthdate_text = request.POST.get('foundation_year')
+        birthdate = datetime.datetime.strptime(birthdate_text, '%Y-%m-%d')
 
-            if User.objects.filter(username=form.cleaned_data['username']).exists():
-                return render(request, template, {
-                    'form': form,
-                    'error_message': 'Username already exists.'
-                })
-            # if (date.today() - form.cleaned_data['birthDate']) < timedelta(days=18 * 365):
-            #     return render(request, template, {
-            #         'form': form,
-            #         'error_message': 'Age should be greater than 18.'
-            #     })
-            if Job_Seeker_Profile.objects.filter(portfolio_link=form.cleaned_data['portfolio_link']).exists():
-                return render(request, template, {
-                    'form': form,
-                    'error_message': 'This portfolio link already exists.'
-                })
+        if password1 != password2:
+            messages.error(request, 'Two password does not match.')
+            return redirect('register_job_seeker')
+        if len(password1) < 8:
+            messages.error(request, 'Password should have minimum 8 charecters.')
+            return redirect('register_job_seeker')
+        if email and User.objects.filter(email=email).exclude(username=username).exists():
+            messages.error(request, 'This email already using.')
+            return redirect('register_job_seeker')
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Username is already taken..')
+            return redirect('register_job_seeker')
 
-            user = form.save()
-            Job_Seeker_Profile.objects.create(user=user, name=form.cleaned_data['name'],
-                                              surname=form.cleaned_data['surname'],
-                                              birth_date=form.cleaned_data['birth_date'],
-                                              carrier_list=form.cleaned_data['carrier_list'],
-                                              portfolio_link=form.cleaned_data['portfolio_link'])
-            user.is_active = True
-            user.save()
+        user = User.objects.create_user(username=username,
+                                            email=email,
+                                            password=password1)
+
+        job_seeker_profile = Job_Seeker_Profile.objects.create(user=user, name=first_name,
+                                              surname=surname,
+                                              birth_date=birthdate)
+
+
+        user.save()
+        job_seeker_profile.save()
 
             # Login the user
-            login(request, user)
-            return redirect('sent')
+        login(request, user)
+        return redirect('sent')
 
     else:
         form = Job_Seeker_RegisterForm()
@@ -133,34 +145,41 @@ def register_Company(request):
     template = 'website/register_Company.html'
 
     if request.method == "POST":
-        form = Company_RegisterForm(request.POST)
-        if form.is_valid():
+        username = request.POST.get('username')
+        email = request.POST['email']
+        company_name = request.POST.get('company')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        tax_id = request.POST.get('company_tax')
+        website = request.POST.get('website')
+        foundation_year = request.POST.get('foundation_year')
 
-            if User.objects.filter(username=form.cleaned_data['username']).exists():
-                return render(request, template, {
-                    'form': form,
-                    'error_message': 'Username already exists.'
-                })
-            if (form.cleaned_data['foundation_year']) >= date.today():
-                return render(request, template, {
-                    'form': form,
-                    'error_message': 'The foundation year cant be in future'
-                })
-            if Company_Profile.objects.filter(tax_id=form.cleaned_data['tax_id']).exists():
-                return render(request, template, {
-                    'form': form,
-                    'error_message': 'This tax id already exists.'
-                })
+        if password1 != password2:
+            messages.error(request, 'Two password does not match.')
+            return redirect('register_company')
+        if len(password1) <= 8:
+            messages.error(request, 'Password should have minimum 8 charecters.')
+            return redirect('register_company')
+        if email and User.objects.filter(email=email).exclude(username=username).exists():
+            messages.error(request, 'This email already using.')
+            return redirect('register_company')
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Username is already taken..')
+            return redirect('register_company')
 
-            user = form.save()
-            Company_Profile.objects.create(user=user, company_name=form.cleaned_data['company_name'],
-                                           tax_id=form.cleaned_data['tax_id'],
-                                           website=form.cleaned_data['website'],
-                                           foundation_year=form.cleaned_data['foundation_year'])
-            user.is_active = False
-            user.save()
+        user = User.objects.create_user(username=username,
+                                        email=email,
+                                        password=password1)
 
-            return redirect('sent')
+        company_profile = Company_Profile.objects.create(user=user, company_name=company_name,
+                                                         tax_id=tax_id,
+                                                         website=website,
+                                                         foundation_year=foundation_year)
+        user.is_active = False
+        user.save()
+        company_profile.save()
+
+        return redirect('sent')
 
     else:
         form = Company_RegisterForm()

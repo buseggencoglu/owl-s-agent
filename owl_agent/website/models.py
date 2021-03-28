@@ -19,7 +19,7 @@ class Company_Profile(User_Profile):
     company_name = models.CharField(max_length=100)
     tax_id = models.IntegerField()
     website = models.CharField(max_length=100)
-    foundation_year = models.DateField()
+    foundation_year = models.IntegerField()
 
 
 class Job_Seeker_Profile(User_Profile):

@@ -6,16 +6,96 @@
 
 {% block content %}
 {% load crispy_forms_tags %}
-<div class="mt-1">
-    <p style="color: Red; text-align: center;">{{error_message}}</p>
-    <h3 style="font-family: 'Comic Sans MS'; margin-left: 23px;">Registeration Form</h3>
-    <form method="post" class="form-group">
-        {% csrf_token %}
-        {{ form|crispy }}
-        <button type="submit" class="btn btn-success">Register</button>
-    </form>
 
+
+
+
+
+<div class="container h-75">
+    <div class="d-flex justify-content-center h-100">
+        <div class="col-md-6 text-center">
+            <div class="card mb-4">
+                <div class="card-header">
+                    Register
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" name="username" placeholder="Username" class="form-control">
+                        </div>
+
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-at"></i></span>
+                            </div>
+                            <input type="text" name="email" placeholder="Email" class="form-control">
+                        </div>
+
+
+                        <div class="input-group mb-2">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input type="password" name="password1" placeholder="Password" class="form-control">
+                        </div>
+                        <div class="input-group mb-2">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-key"></i></span>
+                            </div>
+                            <input type="password" name="password2" placeholder="Password confirmation" class="form-control">
+                        </div>
+
+                          <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-user"></i></span>
+                            </div>
+                            <input type="text" name="first_name" placeholder="First Name" class="form-control">
+                        </div>
+
+                         <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-building"></i></span>
+                            </div>
+                            <input type="text" name="surname" placeholder="Surname" class="form-control">
+                        </div>
+
+                         <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                            </div>
+                            <input type="date" name="foundation_year" placeholder="Birthday" class="form-control" min="1900" max="2021">
+                        </div>
+
+                        <button type="submit" id="login-page-button" class="btn btn-primary">REGISTER</button>
+                    </form>
+
+                </div>
+                {% for message in messages %}
+                <p id="messages">{{message}}</p>
+                {% endfor %}
+
+            </div>
+            <h5>If you have an account <a href="{% url 'login' %}}"><strong>login.</strong></a></h5>
+        </div>
+    </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 {% endblock %}

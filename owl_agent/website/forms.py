@@ -18,7 +18,7 @@ USER_TYPES = (
 
 
 class RoleChooseForm(forms.Form):
-    type = forms.ChoiceField(choices=USER_TYPES, help_text='User Type')
+    type = forms.ChoiceField(choices=USER_TYPES)
 
 
 class Job_Seeker_RegisterForm(UserCreationForm):
@@ -37,7 +37,7 @@ class Company_RegisterForm(UserCreationForm):
     company_name = forms.CharField(max_length=100, help_text='Company Name', widget=forms.TextInput)
     tax_id = forms.IntegerField()
     website = forms.CharField(max_length=100, help_text='Website', widget=forms.TextInput)
-    foundation_year = forms.DateField(widget=forms.widgets.DateInput(attrs={'type': 'date'}))
+    foundation_year = forms.IntegerField()
 
     class Meta:
         model = User

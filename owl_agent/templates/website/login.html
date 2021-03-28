@@ -1,6 +1,6 @@
 {% extends 'website/base.html' %}
 {% block title %}
-Owls Agent Contact Page
+Owls Agent Login Page
 {% endblock %}
 
 {% load static %}
@@ -37,7 +37,7 @@ Owls Agent Contact Page
                 <p id="messages">{{message}}</p>
                 {% endfor %}
             </div>
-            <h5>If you dont have a account <a href="#register"><strong>join us</strong></a></h5>
+            <h5>If you dont have a account <a href="{% url "register" %}"><strong>join us</strong></a></h5>
         </div>
     </div>
 </div>
