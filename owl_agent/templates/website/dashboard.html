@@ -1,0 +1,40 @@
+{% extends 'website/base.html' %}
+{% block title %}
+Owls Agent Admin Dashboard
+{% endblock %}
+
+{% load static %}
+{% block content %}
+
+  <h4 class="mt-3" style="font-family:'Times New Roman'; color: #4e555b">Waited Companies List</h4>
+                <div class="cd-appr-table table rounded " style="border: 2px darkslategrey solid; width: 50%">
+                    <table class="col align-self-center">
+                        <thead>
+                        <th>Company</th>
+                        <th>Tax ID</th>
+                        <th class="text-center" colspan="2">Approval</th>
+                        </thead>
+
+                        {% for i in companies %}
+                            <tr>
+                                <td>{{ i.user.username }}</td>
+
+                                  <td>{{ i.tax_id }}</td>
+
+                                <td class="text-center">
+                                    <a href="/dashboard/approve/{{ i.id }}">
+                                        <button type="submit" class="btn btn-success">Approve</button>
+                                    </a>
+
+                                <a href="/dashboard/reject/{{ i.id }}">
+                                    <button type="button" class="btn btn-danger">Reject</button>
+                                </a>
+                            </td>
+
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+                </div>
+
+{% endblock %}

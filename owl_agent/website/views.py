@@ -48,6 +48,26 @@ def single_blog_view(request):
 def elements_view(request):
     return render(request, 'website/elements.html')
 
+def admin_dashboard(request):
+    context = {}
+    user = request.user
+
+    context["companies"] = Company_Profile.objects.filter(user__is_active=False)
+
+    return render(request, 'website/dashboard.html', context)
+
+def approve_companies(request,pk):
+    company = Company_Profile.objects.get(id=pk)
+    company.user.is_active = True
+    company.user.save()
+
+    return HttpResponseRedirect('/dashboard')
+
+def reject_companies(request,pk):
+    company = Company_Profile.objects.get(id=pk)
+    company.user.delete()
+
+    return HttpResponseRedirect('/dashboard')
 
 def role_choose(request):
     template = 'website/role_choose.html'
