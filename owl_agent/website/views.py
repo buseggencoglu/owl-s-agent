@@ -118,7 +118,7 @@ def register_Company(request):
                     'form': form,
                     'error_message': 'Username already exists.'
                 })
-            if (date.today() - form.cleaned_data['foundation_year']) < 0:
+            if (form.cleaned_data['foundation_year']) >= date.today()  :
                 return render(request, template, {
                     'form': form,
                     'error_message': 'The foundation year cant be in future'
