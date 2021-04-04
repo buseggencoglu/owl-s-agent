@@ -22,8 +22,10 @@ Profile
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex flex-column align-items-center text-center">
-                            <img src="https://assets.stickpng.com/images/585e4bf3cb11b227491c339a.png" alt="Admin"
-                                 class="rounded-circle" width="150">
+                            {% if profile.image %}
+                            <img src="{{profile.image.url}}" height="150" width="150"
+                                 class="rounded-circle">
+                            {% endif %}
                             <div class="mt-3">
                                 <h4><b>{{profile.user.username}}</b></h4>
                                 <a href="{% url 'edit_profile_company' pk=user.id %}">

@@ -224,7 +224,7 @@ def edit_profile_company(request, pk):
     company = Company_Profile.objects.filter(user=request.user)[0]
 
     if request.method == 'POST':
-
+        image = request.FILES.get('image')
         company_name = request.POST.get('company_name')
         email = request.POST.get('email')
         foundation_year = request.POST.get('foundation_year')
@@ -245,10 +245,14 @@ def edit_profile_company(request, pk):
             messages.error(request, 'This tax id is already in use.')
             return redirect('edit_profile_company', pk=pk)
 
+        if image is None:
+            image = company.image
+
         user = User.objects.filter(pk=pk)
         user.update(email=email)
 
         company_p = Company_Profile.objects.get(user_id=pk)
+        company_p.image = image
         company_p.company_name = company_name
         company_p.foundation_year = foundation_year
         company_p.tax_id = tax_id
