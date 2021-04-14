@@ -18,5 +18,8 @@ urlpatterns = [
     path('logout/', views.logout_view, name='logout'),
     path ('dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('dashboard/approve/<int:pk>', views.approve_companies, name='company_approve'),
-    path('dashboard/reject/<int:pk>', views.reject_companies, name='company_reject')
+    path('dashboard/reject/<int:pk>', views.reject_companies, name='company_reject'),
+    path('dashboardList/', views.admin_dashboard_list, name='admin_dashboard_list'),
+    path('dashboardList/deleteCompany/<int:pk>', views.admin_delete_companies, name='admin_delete_companies'),
+    path('dashboardList/deleteJobSeeker/<int:pk>', views.admin_delete_jobseeker, name='admin_delete_jobseeker'),
 ]

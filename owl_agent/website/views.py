@@ -7,6 +7,7 @@ from .models import Job_Seeker_Profile, Company_Profile
 from datetime import date
 from django.contrib import messages
 
+
 from django.contrib.auth import (
     authenticate,
     login,
@@ -55,6 +56,34 @@ def admin_dashboard(request):
     context["companies"] = Company_Profile.objects.filter(user__is_active=False)
 
     return render(request, 'website/dashboard.html', context)
+
+
+def admin_dashboard_list(request):
+   querySet = Company_Profile.objects.all()
+   listing_jobseeker = Job_Seeker_Profile.objects.all()
+
+   return render(request,"website/List.html",{"querySet": querySet, "listing_jobseeker": listing_jobseeker,},)
+
+def admin_delete_companies(request,pk):
+    company = Company_Profile.objects.get(id=pk)
+    company.user.delete()
+
+    return HttpResponseRedirect('/dashboardList')
+
+
+def admin_delete_jobseeker(request,pk):
+    company = Job_Seeker_Profile.objects.get(id=pk)
+    company.user.delete()
+
+    return HttpResponseRedirect('/dashboardList')
+
+
+
+
+
+
+
+
 
 def approve_companies(request,pk):
     company = Company_Profile.objects.get(id=pk)
