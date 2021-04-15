@@ -115,14 +115,7 @@
 
 
 
-                                    {% if user.is_authenticated  %}
-                                            {% if user_type == 'company' %}
-
-
-                                            <li><a href="{% url 'post_job' %}">Post Job </a></li>{% else %}
-                                                <li><a href="{% url 'job-listing' %}">Find a Job</a></li>
-                                             {% endif %}
-                                        {% endif %}
+                                 
                                         <li><a href="{% url 'about' %}">About</a></li>
                                         <li><a href="#">Page</a>
                                             <ul class="submenu">
