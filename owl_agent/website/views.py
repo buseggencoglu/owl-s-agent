@@ -1,11 +1,12 @@
 import datetime
 
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
 from .forms import Job_Seeker_RegisterForm, RoleChooseForm, Company_RegisterForm, EditCompanyProfileForm
-from .models import Job_Seeker_Profile, Company_Profile
+from .models import Job_Seeker_Profile, Company_Profile, Job_Offer
 from datetime import date
 from django.contrib import messages
 
@@ -15,6 +16,21 @@ from django.contrib.auth import (
     logout,
     get_user_model,
 )
+
+
+def company_required(function):
+    def wrapper(request, *args, **kw):
+        user = request.user
+        if not user.is_authenticated:
+            return redirect('login')
+        else:
+            company_profile = Company_Profile.objects.get(user=user)
+            if company_profile is not None:
+                return function(request, *args, **kw)
+            else:
+                return redirect('home')
+
+    return wrapper
 
 
 # Create your views here.
@@ -51,6 +67,7 @@ def elements_view(request):
     return render(request, 'website/elements.html')
 
 
+@staff_member_required
 def admin_dashboard(request):
     context = {}
     user = request.user
@@ -60,6 +77,7 @@ def admin_dashboard(request):
     return render(request, 'website/dashboard.html', context)
 
 
+@staff_member_required
 def approve_companies(request, pk):
     company = Company_Profile.objects.get(id=pk)
     company.user.is_active = True
@@ -68,6 +86,7 @@ def approve_companies(request, pk):
     return HttpResponseRedirect('/dashboard')
 
 
+@staff_member_required
 def reject_companies(request, pk):
     company = Company_Profile.objects.get(id=pk)
     company.user.delete()
@@ -185,8 +204,38 @@ def register_Company(request):
     return render(request, template, {"form": form})
 
 
+@company_required
+def post_job(request):
+    # if this is a POST request we need to process the form data
+    template = 'website/post_job.html'
+
+    if request.method == "POST":
+        title = request.POST.get('title')
+        description = request.POST['description']
+        required_skills = request.POST['required_skills']
+        education = request.POST['education']
+        location = request.POST['location']
+        type = request.POST['type']
+        is_experience = True if request.POST['is_experience'] == "true" else False
+        salary = request.POST['salary']
+        start_date = request.POST['start_date']
+        company = Company_Profile.objects.get(user=request.user)
+
+        job_offer = Job_Offer.objects.create(title=title, description=description, required_skills=required_skills,
+                                             education=education, location=location, type=type, salary=salary,
+                                             is_experience=is_experience, start_date=start_date, company=company)
+        job_offer.save()
+
+        return redirect('job_sent')
+
+    return render(request, template)
+
+
 def activation_sent_view(request):
     return render(request, 'website/activation_sent.html')
+
+def job_sent_view(request):
+    return render(request, 'website/job_sent.html')
 
 
 def login_view(request):
