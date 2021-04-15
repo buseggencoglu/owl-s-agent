@@ -2,9 +2,9 @@ import datetime
 
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from .forms import Job_Seeker_RegisterForm, RoleChooseForm, Company_RegisterForm
+from .forms import Job_Seeker_RegisterForm, RoleChooseForm, Company_RegisterForm, EditCompanyProfileForm
 from .models import Job_Seeker_Profile, Company_Profile
 from datetime import date
 from django.contrib import messages
@@ -120,18 +120,17 @@ def register_Job_Seeker(request):
             return redirect('register_job_seeker')
 
         user = User.objects.create_user(username=username,
-                                            email=email,
-                                            password=password1)
+                                        email=email,
+                                        password=password1)
 
         job_seeker_profile = Job_Seeker_Profile.objects.create(user=user, name=first_name,
-                                              surname=surname,
-                                              birth_date=birthdate)
-
+                                                               surname=surname,
+                                                               birth_date=birthdate)
 
         user.save()
         job_seeker_profile.save()
 
-            # Login the user
+        # Login the user
         login(request, user)
         return redirect('sent')
 
@@ -213,3 +212,55 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('home')
+
+
+def company_profile(request, pk):
+    profile = Company_Profile.objects.get(user_id=pk)
+    return render(request, 'website/company_profile.html', {'profile': profile})
+
+
+def edit_profile_company(request, pk):
+    template = 'website/edit_profile_company.html'
+    company = Company_Profile.objects.filter(user=request.user)[0]
+
+    if request.method == 'POST':
+        image = request.FILES.get('image')
+        company_name = request.POST.get('company_name')
+        email = request.POST.get('email')
+        foundation_year = request.POST.get('foundation_year')
+        tax_id = request.POST.get('tax_id')
+        website = request.POST.get('website')
+
+        if Company_Profile.objects.filter(company_name=company_name).exclude(
+                company_name=company.company_name).exists():
+            messages.error(request, 'This company name is already in use.')
+            return redirect('edit_profile_company', pk=pk)
+
+        if email and User.objects.filter(email=email).exclude(email=company.user.email).exists():
+            messages.error(request, 'This email is already in use.')
+            return redirect('edit_profile_company', pk=pk)
+
+        if Company_Profile.objects.filter(tax_id=tax_id).exclude(
+                tax_id=company.tax_id).exists():
+            messages.error(request, 'This tax id is already in use.')
+            return redirect('edit_profile_company', pk=pk)
+
+        if image is None:
+            image = company.image
+
+        user = User.objects.filter(pk=pk)
+        user.update(email=email)
+
+        company_p = Company_Profile.objects.get(user_id=pk)
+        company_p.image = image
+        company_p.company_name = company_name
+        company_p.foundation_year = foundation_year
+        company_p.tax_id = tax_id
+        company_p.website = website
+        company_p.save()
+
+        return redirect('company_profile', pk=pk)
+    else:
+        form = EditCompanyProfileForm()
+        args = {'form': form, 'company': company}
+        return render(request, template, args)

@@ -42,3 +42,15 @@ class Company_RegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'company_name', 'password1', 'password2')
+
+
+class EditCompanyProfileForm(forms.Form):
+    company_name = forms.CharField(max_length=100, widget=forms.TextInput)
+    foundation_year = forms.IntegerField()
+    tax_id = forms.IntegerField()
+    website = forms.CharField(max_length=100, widget=forms.TextInput)
+    email = forms.EmailField(max_length=150, widget=forms.EmailInput)
+
+    class Meta:
+        model = Company_Profile
+        fields = ('company_name', 'email', 'foundation_year', 'tax_id', 'website')

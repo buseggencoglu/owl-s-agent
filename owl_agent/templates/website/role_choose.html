@@ -15,27 +15,27 @@ Owls Agent Role Choose
                     Choose your account type
                 </div>
                 <div class="card-body">
-                   <form method="post" class="form-group">
-{% csrf_token %}
-                         <div class="input-group w-25 mx-auto">
+                    <form method="post" class="form-group">
+                        {% csrf_token %}
+                        <div class="input-group w-25 mx-auto">
 
 
-      <select id="type" name="type">
-        <option value="job_seeker">Job Seeker</option>
-        <option value="company">Company</option>
-      </select>
+                            <select id="type" name="type">
+                                <option value="job_seeker">Job Seeker</option>
+                                <option value="company">Company</option>
+                            </select>
 
                         </div>
 
 
-                       <div class="pt-4">
-                        <button type="submit" class="btn btn-success">Choose</button>
+                        <div class="pt-4">
+                            <button type="submit" class="btn btn-success">Choose</button>
                         </div>
-                   </form>
+                    </form>
+                </div>
+
             </div>
-
         </div>
     </div>
-</div>
 </div>
 {% endblock %}

@@ -1,0 +1,125 @@
+{% extends 'website/base.html' %}
+{% block title %}
+Profile
+{% endblock %}
+
+{% load static %}
+{% block content %}
+<br><br>
+
+{% load crispy_forms_tags %}
+<div class="container">
+    <form method="POST" enctype="multipart/form-data">
+        <div class="main-body">
+            {% csrf_token %}
+
+            <nav aria-label="breadcrumb" class="main-breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active" aria-current="page">Edit Profile</li>
+                </ol>
+            </nav>
+
+            <div class="row gutters-sm">
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex flex-column align-items-center text-center">
+                                {% if company.image %}<img src="{{company.image.url}}" height="150" width="150"
+                                                           class="rounded-circle">{% endif %}
+                                <input type="file" name="image" class="form-control">Resim seçiniz
+                                <div class="mt-3">
+                                    <h4><b>{{user.username}}</b></h4>
+                                    <a>
+                                        <button type="submit" class="btn btn-info"
+                                                href="{% url 'company_profile' pk=user.id %}">Save
+                                        </button>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mt-3">
+                    </div>
+                </div>
+
+                <div class="col-md-8">
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0"><b>Username</b></h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    {{user.username}}
+                                </div>
+                            </div>
+                            <hr>
+
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0"><b>Company Name</b></h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="text" name="company_name" value={{company.company_name}}
+                                           class="form-control">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0"><b> Email</b></h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="email" name="email" value={{company.user.email}}
+                                           class="form-control">
+                                </div>
+                            </div>
+                            <hr>
+
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0"><b>Foundation Year</b></h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="number" name="foundation_year"
+                                           value={{company.foundation_year}}
+                                           class="form-control" min="1900" max="2021">
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0"><b>Tax Id</b></h6>
+                                </div>
+
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="number" name="tax_id" value={{company.tax_id}}
+                                           class="form-control">
+                                </div>
+                                <hr>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-sm-3">
+                                    <h6 class="mb-0"><b>Website</b></h6>
+                                </div>
+                                <div class="col-sm-9 text-secondary">
+                                    <input type="url" name="website" value={{company.website}}
+                                           class="form-control">
+                                </div>
+                                <hr>
+                            </div>
+
+                        </div>
+                        {% for message in messages %}
+                        <p id="messages">{{message}}</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </form>
+</div>
+{% endblock %}
