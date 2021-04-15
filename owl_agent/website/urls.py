@@ -21,4 +21,7 @@ urlpatterns = [
     path('dashboard/reject/<int:pk>', views.reject_companies, name='company_reject'),
     path('company_profile/<int:pk>', views.company_profile, name='company_profile'),
     path('edit_profile_company/<int:pk>', views.edit_profile_company, name='edit_profile_company'),
+    path('dashboardList/', views.admin_dashboard_list, name='admin_dashboard_list'),
+    path('dashboardList/deleteCompany/<int:pk>', views.admin_delete_companies, name='admin_delete_companies'),
+    path('dashboardList/deleteJobSeeker/<int:pk>', views.admin_delete_jobseeker, name='admin_delete_jobseeker'),
 ]

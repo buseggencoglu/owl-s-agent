@@ -264,3 +264,24 @@ def edit_profile_company(request, pk):
         form = EditCompanyProfileForm()
         args = {'form': form, 'company': company}
         return render(request, template, args)
+
+
+
+def admin_dashboard_list(request):
+   querySet = Company_Profile.objects.all()
+   listing_jobseeker = Job_Seeker_Profile.objects.all()
+
+   return render(request,"website/listing.html",{"querySet": querySet, "listing_jobseeker": listing_jobseeker,},)
+
+def admin_delete_companies(request,pk):
+    company = Company_Profile.objects.get(id=pk)
+    company.user.delete()
+
+    return HttpResponseRedirect('/dashboardList')
+
+
+def admin_delete_jobseeker(request,pk):
+    company = Job_Seeker_Profile.objects.get(id=pk)
+    company.user.delete()
+
+    return HttpResponseRedirect('/dashboardList')
