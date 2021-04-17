@@ -23,11 +23,19 @@ class Company_Profile(User_Profile):
 
 
 class Job_Seeker_Profile(User_Profile):
+    GENDER = (
+        ('M', 'Male'),
+        ('F', 'Female'),
+        ('O', 'Other'),
+    )
+    gender = models.CharField(max_length=1, choices=GENDER, null=True, blank=True)
     name = models.CharField(max_length=100)
     surname = models.CharField(max_length=100)
     birth_date = models.DateField()
     carrier_list = models.CharField(max_length=2000)
     portfolio_link = models.CharField(max_length=100)
+    image = models.ImageField(upload_to='job_seeker_image', null=True, blank=True, default='job_seeker_image/default')
+
 
 
 class CV(models.Model):

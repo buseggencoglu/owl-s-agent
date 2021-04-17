@@ -120,18 +120,17 @@ def register_Job_Seeker(request):
             return redirect('register_job_seeker')
 
         user = User.objects.create_user(username=username,
-                                            email=email,
-                                            password=password1)
+                                        email=email,
+                                        password=password1)
 
         job_seeker_profile = Job_Seeker_Profile.objects.create(user=user, name=first_name,
-                                              surname=surname,
-                                              birth_date=birthdate)
-
+                                                               surname=surname,
+                                                               birth_date=birthdate)
 
         user.save()
         job_seeker_profile.save()
 
-            # Login the user
+        # Login the user
         login(request, user)
         return redirect('sent')
 
@@ -213,3 +212,24 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('home')
+
+
+def edit_profile_job_seeker(request):
+    context = {}
+    data = Job_Seeker_Profile.objects.get(user=request.user)
+    context["data"] = data
+
+    if request.method == "POST":
+        data.name = request.POST["name"]
+        data.surname = request.POST["surname"]
+        data.carrier_list = request.POST["carrier_list"]
+        data.portfolio_link = request.POST["portfolio_link"]
+        data.gender = request.POST["gender"]
+
+        if "image" in request.FILES:
+            image = request.FILES["image"]
+            data.image = image
+
+        data.save()
+        messages.success(request, "Profile updated successfully.")
+    return render(request, 'website/edit_profile_job_seeker.html', context)
