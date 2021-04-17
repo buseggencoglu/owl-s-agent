@@ -263,6 +263,26 @@ def logout_view(request):
     return redirect('home')
 
 
+def edit_profile_job_seeker(request):
+    context = {}
+    data = Job_Seeker_Profile.objects.get(user=request.user)
+    context["data"] = data
+
+    if request.method == "POST":
+        data.name = request.POST["name"]
+        data.surname = request.POST["surname"]
+        data.carrier_list = request.POST["carrier_list"]
+        data.portfolio_link = request.POST["portfolio_link"]
+        data.gender = request.POST["gender"]
+
+        if "image" in request.FILES:
+            image = request.FILES["image"]
+            data.image = image
+
+        data.save()
+        messages.success(request, "Profile updated successfully.")
+    return render(request, 'website/edit_profile_job_seeker.html', context)
+
 def company_profile(request, pk):
     profile = Company_Profile.objects.get(user_id=pk)
     return render(request, 'website/company_profile.html', {'profile': profile})
