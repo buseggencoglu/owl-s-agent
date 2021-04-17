@@ -1,11 +1,12 @@
 import datetime
 
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from .forms import Job_Seeker_RegisterForm, RoleChooseForm, Company_RegisterForm
-from .models import Job_Seeker_Profile, Company_Profile
+from .forms import Job_Seeker_RegisterForm, RoleChooseForm, Company_RegisterForm, EditCompanyProfileForm
+from .models import Job_Seeker_Profile, Company_Profile, Job_Offer
 from datetime import date
 from django.contrib import messages
 
@@ -15,6 +16,21 @@ from django.contrib.auth import (
     logout,
     get_user_model,
 )
+
+
+def company_required(function):
+    def wrapper(request, *args, **kw):
+        user = request.user
+        if not user.is_authenticated:
+            return redirect('login')
+        else:
+            company_profile = Company_Profile.objects.get(user=user)
+            if company_profile is not None:
+                return function(request, *args, **kw)
+            else:
+                return redirect('home')
+
+    return wrapper
 
 
 # Create your views here.
@@ -51,6 +67,7 @@ def elements_view(request):
     return render(request, 'website/elements.html')
 
 
+@staff_member_required
 def admin_dashboard(request):
     context = {}
     user = request.user
@@ -60,6 +77,7 @@ def admin_dashboard(request):
     return render(request, 'website/dashboard.html', context)
 
 
+@staff_member_required
 def approve_companies(request, pk):
     company = Company_Profile.objects.get(id=pk)
     company.user.is_active = True
@@ -68,6 +86,7 @@ def approve_companies(request, pk):
     return HttpResponseRedirect('/dashboard')
 
 
+@staff_member_required
 def reject_companies(request, pk):
     company = Company_Profile.objects.get(id=pk)
     company.user.delete()
@@ -185,8 +204,38 @@ def register_Company(request):
     return render(request, template, {"form": form})
 
 
+@company_required
+def post_job(request):
+    # if this is a POST request we need to process the form data
+    template = 'website/post_job.html'
+
+    if request.method == "POST":
+        title = request.POST.get('title')
+        description = request.POST['description']
+        required_skills = request.POST['required_skills']
+        education = request.POST['education']
+        location = request.POST['location']
+        type = request.POST['type']
+        is_experience = True if request.POST['is_experience'] == "true" else False
+        salary = request.POST['salary']
+        start_date = request.POST['start_date']
+        company = Company_Profile.objects.get(user=request.user)
+
+        job_offer = Job_Offer.objects.create(title=title, description=description, required_skills=required_skills,
+                                             education=education, location=location, type=type, salary=salary,
+                                             is_experience=is_experience, start_date=start_date, company=company)
+        job_offer.save()
+
+        return redirect('job_sent')
+
+    return render(request, template)
+
+
 def activation_sent_view(request):
     return render(request, 'website/activation_sent.html')
+
+def job_sent_view(request):
+    return render(request, 'website/job_sent.html')
 
 
 def login_view(request):
@@ -233,3 +282,75 @@ def edit_profile_job_seeker(request):
         data.save()
         messages.success(request, "Profile updated successfully.")
     return render(request, 'website/edit_profile_job_seeker.html', context)
+
+def company_profile(request, pk):
+    profile = Company_Profile.objects.get(user_id=pk)
+    return render(request, 'website/company_profile.html', {'profile': profile})
+
+
+def edit_profile_company(request, pk):
+    template = 'website/edit_profile_company.html'
+    company = Company_Profile.objects.filter(user=request.user)[0]
+
+    if request.method == 'POST':
+        image = request.FILES.get('image')
+        company_name = request.POST.get('company_name')
+        email = request.POST.get('email')
+        foundation_year = request.POST.get('foundation_year')
+        tax_id = request.POST.get('tax_id')
+        website = request.POST.get('website')
+
+        if Company_Profile.objects.filter(company_name=company_name).exclude(
+                company_name=company.company_name).exists():
+            messages.error(request, 'This company name is already in use.')
+            return redirect('edit_profile_company', pk=pk)
+
+        if email and User.objects.filter(email=email).exclude(email=company.user.email).exists():
+            messages.error(request, 'This email is already in use.')
+            return redirect('edit_profile_company', pk=pk)
+
+        if Company_Profile.objects.filter(tax_id=tax_id).exclude(
+                tax_id=company.tax_id).exists():
+            messages.error(request, 'This tax id is already in use.')
+            return redirect('edit_profile_company', pk=pk)
+
+        if image is None:
+            image = company.image
+
+        user = User.objects.filter(pk=pk)
+        user.update(email=email)
+
+        company_p = Company_Profile.objects.get(user_id=pk)
+        company_p.image = image
+        company_p.company_name = company_name
+        company_p.foundation_year = foundation_year
+        company_p.tax_id = tax_id
+        company_p.website = website
+        company_p.save()
+
+        return redirect('company_profile', pk=pk)
+    else:
+        form = EditCompanyProfileForm()
+        args = {'form': form, 'company': company}
+        return render(request, template, args)
+
+
+
+def admin_dashboard_list(request):
+   querySet = Company_Profile.objects.all()
+   listing_jobseeker = Job_Seeker_Profile.objects.all()
+
+   return render(request,"website/listing.html",{"querySet": querySet, "listing_jobseeker": listing_jobseeker,},)
+
+def admin_delete_companies(request,pk):
+    company = Company_Profile.objects.get(id=pk)
+    company.user.delete()
+
+    return HttpResponseRedirect('/dashboardList')
+
+
+def admin_delete_jobseeker(request,pk):
+    company = Job_Seeker_Profile.objects.get(id=pk)
+    company.user.delete()
+
+    return HttpResponseRedirect('/dashboardList')

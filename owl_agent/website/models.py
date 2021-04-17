@@ -16,6 +16,7 @@ class User_Profile(models.Model):
 
 
 class Company_Profile(User_Profile):
+    image = models.ImageField(upload_to='company_image', null=True, blank=True, default='company_image/default')
     company_name = models.CharField(max_length=100)
     tax_id = models.IntegerField()
     website = models.CharField(max_length=100)
@@ -52,14 +53,16 @@ class CV(models.Model):
 class Job_Offer(models.Model):
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=10000)
-    start_date = models.DateField()
-    end_date = models.DateField()
-    type = models.CharField(max_length=50)
+    required_skills = models.CharField(max_length=10000, blank=True)
+    education = models.CharField(max_length=10000, blank=True)
+    start_date = models.DateField(blank=True)
+    post_date = models.DateField(auto_now_add=True, blank=True)
+    type = models.CharField(max_length=50, blank=True)
     location = models.CharField(max_length=500)
-    work_level = models.CharField(max_length=100)
-    is_experience = models.BooleanField()
-    quota = models.IntegerField()
-
+    work_level = models.CharField(max_length=100,blank=True)
+    is_experience = models.BooleanField(blank=True)
+    salary = models.CharField(max_length=100, blank=True)
+    company = models.ForeignKey(Company_Profile, on_delete=models.CASCADE, related_name='%(class)s_company')
 
 class Application(models.Model):
     applicant = models.ForeignKey(Job_Seeker_Profile, on_delete=models.CASCADE, related_name='%(class)s_applicant')

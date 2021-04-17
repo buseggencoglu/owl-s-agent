@@ -1,0 +1,111 @@
+{% extends 'website/base.html' %}
+
+{% block title %}
+Job Post
+{% endblock %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+
+
+<p style="color: Red; text-align: center;">{{error_message}}</p>
+
+
+
+<div class="container h-100">
+    <div class="d-flex justify-content-center h-100">
+        <div class="col-md-6 text-center">
+            <div class="card mb-4">
+                <div class="card-header">
+                    Post a job offer !
+                </div>
+                <div class="card-body">
+                    <form method="POST" action="">
+                        {% csrf_token %}
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-sticky-note"></i></span>
+                            </div>
+                            <input type="text" name="title" placeholder="Title" class="form-control">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-paperclip"></i></span>
+                            </div>
+                                <textarea class="form-control" name="description" id="description" rows="3" placeholder="Description"></textarea>
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-paperclip"></i></span>
+                            </div>
+                            <textarea class="form-control" name="required_skills" id="required_skills" rows="3" placeholder="Required Knowledge, Skills, and Abilities"></textarea>
+                        </div>
+
+
+
+                         <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-paperclip"></i></span>
+                            </div>
+                            <textarea class="form-control" name="education" id="education" rows="3" placeholder="Education + Experience"></textarea>
+                        </div>
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-location-arrow"></i></span>
+                            </div>
+                            <input type="text" name="location" placeholder="Location" class="form-control">
+                        </div>
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-clipboard"></i></span>
+                            </div>
+                                <select class="form-control" id="type" name="type">
+                                  <option value="Full Time">Full Time</option>
+                                  <option value="Part Time">Part Time</option>
+                                  <option value="Remote">Remote</option>
+                                  <option value="Internship">Internship</option>
+                                </select>
+                        </div>
+
+                           <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-clipboard"></i></span>
+                            </div>
+                                <select class="form-control" id="is_experience" name="is_experience">
+                                  <option value="true">Experienced</option>
+                                  <option value="false">Not Important</option>
+                                </select>
+                        </div>
+
+                           <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-money-bill-alt"></i></span>
+                            </div>
+                            <input type="text" name="salary" id="salary" placeholder="Salary"  class="form-control">
+                        </div>
+                            <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-calendar"></i></span>
+                            </div>
+                            <input type="date" name="start_date" placeholder="Start Date" class="form-control" min="2021" max="2030">
+                        </div>
+
+
+                        <button type="submit" id="login-page-button" class="btn btn-primary">Post a job!</button>
+                    </form>
+
+                </div>
+
+                {% for message in messages %}
+                <p id="messages">{{message}}</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+{% endblock %}

@@ -27,12 +27,47 @@
     <link rel="stylesheet" href="{% static 'css/style.css'%}">
     <link rel="stylesheet" href="{% static 'css/responsive.css'%}">
 
-    <style>
+<style>
         #logout_id {
             width: 51%;
             border-radius: 50px;
             background-color: darkblue;
         }
+
+        .collapsible {
+            background-color: #ff0066;
+            color: white;
+            cursor: pointer;
+            padding: 18px;
+            width: 50%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            }
+
+        .active, .collapsible:hover {
+            background-color: #000080;
+            }
+
+        .content {
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            background-color: #f1f1f1;
+            }
+
+        table {
+            font-family: arial, sans-serif;
+            width: 50%;
+        }
+
+        td, th {
+            text-align: left;
+            padding: 8px;
+        }
+
+
 
     </style>
 
@@ -70,8 +105,19 @@
                                         {% endif %}
                                         {% endif %}
 
+                                         {% if user.is_authenticated  %}
+                                            {% if user_type == 'admin' %}
+                                            <li><a href="/dashboardList">Listing</a></li>
+                                                {% elif user_type == 'company' %}
+                                                <li><a href="{% url 'post_job' %}">Post Job </a></li>
+                                             {% else %}
+                                            <li><a href="{% url 'job-listing' %}">Find a Jobs </a></li>
+                                             {%endif%}
+                                        {% endif %}
 
-                                        <li><a href="{% url 'job-listing' %}">Find a Jobs </a></li>
+
+
+                                 
                                         <li><a href="{% url 'about' %}">About</a></li>
                                         <li><a href="#">Page</a>
                                             <ul class="submenu">
@@ -82,6 +128,9 @@
                                             </ul>
                                         </li>
                                         <li><a href="{% url 'contact' %}">Contact</a></li>
+                                        {% if user_type == 'company' %}
+                                        <li><a href="{% url 'company_profile' pk=user.id  %}">Profile</a></li>
+                                        {% endif %}
                                     </ul>
                                 </nav>
                             </div>
