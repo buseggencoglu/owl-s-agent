@@ -1,6 +1,6 @@
 # owl-s-agent- Career Posting Application
 
-![Scheme](website/static/img/logo/logo.png)
+![Scheme](owl_agent/website/static/img/logo/logo.png)
 
 
 ## Quick Start
