@@ -1,4 +1,4 @@
-# owl-s-agent- Career Posting Application
+# OWL'S AGENT - Career Posting Application
 
 ![Scheme](owl_agent/website/static/img/logo/logo.png)
 
