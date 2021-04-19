@@ -9,6 +9,7 @@ from .forms import Job_Seeker_RegisterForm, RoleChooseForm, Company_RegisterForm
 from .models import Job_Seeker_Profile, Company_Profile, Job_Offer
 from datetime import date
 from django.contrib import messages
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
 from django.contrib.auth import (
     authenticate,
@@ -335,12 +336,14 @@ def edit_profile_company(request, pk):
         return render(request, template, args)
 
 
-
 def admin_dashboard_list(request):
-   querySet = Company_Profile.objects.all()
-   listing_jobseeker = Job_Seeker_Profile.objects.all()
+   querySet = Company_Profile.objects.all().order_by()
+   querySet = create_paginator(request, querySet)
+   listing_jobseeker = Job_Seeker_Profile.objects.all().order_by()
+   listing_jobseeker = create_paginator(request, listing_jobseeker)
 
-   return render(request,"website/listing.html",{"querySet": querySet, "listing_jobseeker": listing_jobseeker,},)
+   return render(request, 'website/listing.html', {'querySet': querySet, 'listing_jobseeker': listing_jobseeker})
+
 
 def admin_delete_companies(request,pk):
     company = Company_Profile.objects.get(id=pk)
@@ -354,3 +357,16 @@ def admin_delete_jobseeker(request,pk):
     company.user.delete()
 
     return HttpResponseRedirect('/dashboardList')
+
+
+def create_paginator(request, list):
+    page = request.GET.get('page', 1)
+    paginator = Paginator(list, 2)
+    try:
+        posts = paginator.page(page)
+    except PageNotAnInteger:
+        posts = paginator.page(1)
+    except EmptyPage:
+        posts = paginator.page(paginator.num_pages)
+    return posts
+
