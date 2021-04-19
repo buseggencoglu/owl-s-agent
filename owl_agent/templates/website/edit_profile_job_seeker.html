@@ -34,7 +34,8 @@ Owls Agent Login Page
                             </div>
                             <div class="col-md-12 mb-3 mb-md-0">
                                 <label class="text-black" for="">Surname</label>
-                                <input type="text" class="form-control" name="surname" value="{{data.surname}}" required>
+                                <input type="text" class="form-control" name="surname" value="{{data.surname}}"
+                                       required>
                             </div>
                             <div class="col-md-12 mb-3 mb-md-0">
                                 <label class="text-black" for="">Birth date</label>
@@ -44,18 +45,19 @@ Owls Agent Login Page
                             <div class="col-md-12 mb-3 mb-md-0">
                                 <label class="text-black" for="">Carrier List</label>
                                 <input type="text" class="form-control" name="carrier_list"
-                                       value="{{data.carrier_list}}">
+                                       value="{{data.carrier_list}}" required>
                             </div>
                             <div class="col-md-12 mb-3 mb-md-0">
                                 <label class="text-black" for="">Portfolio Link</label>
                                 <input type="text" class="form-control" name="portfolio_link"
-                                       value="{{data.portfolio_link}}">
+                                       value="{{data.portfolio_link}}" required>
                             </div>
                             <div class="col-md-12 mb-3 mb-md-0">
-                                <label class="text-black" for="">Gender</label><br>
-
+                                <label class="text-black" for="" >Gender : </label>
+                                <input type="radio" name="gender" value="M" required>
+                                <br>
                                 {% if data.gender == 'M' %}
-                                <input type="radio" name="gender" value="M" checked required>
+                                <input type="radio" name="gender" value="M" checked>
                                 <strong><label>Male</label></strong>
                                 {% else %}
                                 <input type="radio" name="gender" id="male" value="M">
@@ -63,7 +65,7 @@ Owls Agent Login Page
                                 {% endif %}
 
                                 {% if data.gender == 'F' %}
-                                <input type="radio" name="gender" value="F" checked required>
+                                <input type="radio" name="gender" value="F" checked>
                                 <strong><label>Female</label></strong>
                                 {% else %}
                                 <input type="radio" name="gender" id="female" value="F">
@@ -71,7 +73,7 @@ Owls Agent Login Page
                                 {% endif %}
 
                                 {% if data.gender == 'O' %}
-                                <input type="radio" name="gender" value="O" checked required>
+                                <input type="radio" name="gender" value="O" checked>
                                 <strong><label>Other</label></strong>
                                 {% else %}
                                 <input type="radio" name="gender" id="other" value="O">
