@@ -1,0 +1,76 @@
+{% extends 'website/base.html' %}
+{% block title %}
+Owls Agent Login Page
+{% endblock %}
+
+{% load static %}
+{% block content %}
+
+<div class="container h-80 w-100">
+    <div class="d-flex justify-content-center h-80 w-100">
+      <div class="card p-2 w-25">
+            <div class="card-header" >
+                {{ data.name }} {{ data.surname }}
+            </div>
+            <div class="card-body">
+                <div class="col-md-12 mb-3 mb-md-0 text-center">
+                    {% if data.image %}
+                        <img class="rounded-circle" src="{{data.image.url}}" width="100px" height="100px"/>
+                    {% endif %}
+                </div>
+                <div class="row form-group">
+                    <div class="col-md-12 mb-3 mb-md-0">
+                        <label class="text-black" for="">Birth date</label>
+                        <input type="text" class="form-control" name="birth_date" value="{{data.birth_date}}"
+                               readonly>
+                    </div>
+                    <div class="col-md-12 mb-3 mb-md-0">
+                        <label class="text-black" for="">Carrier List</label>
+                        <input type="text" class="form-control" name="carrier_list"
+                               value="{{data.carrier_list}}" readonly>
+                    </div>
+                    <div class="col-md-12 mb-3 mb-md-0">
+                        <label class="text-black" for="">Portfolio Link</label>
+                        <input type="text" class="form-control" name="portfolio_link"
+                               value="{{data.portfolio_link}}" readonly>
+                    </div>
+                    <div class="col-md-12 mb-3 mb-md-0">
+                        <label class="text-black" for="">Gender</label><br>
+                        <span>{{ data.gender }}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mb-4 w-75">
+            <div class="card-header d-flex flex-row justify-content-end">
+                <div class="align-self-start mr-auto">
+                    CVs
+                </div>
+                <div class="align-self-end">
+                    <a href="{% url 'add_cv' %}">
+                        <button class="button rounded-0 primary-bg text-white w-100 btn_1 boxed-btn">
+                            +Add
+                        </button>
+                    </a>
+                </div>
+            </div>
+            <div class="card-body flex-wrap flex-row">
+                {% for cv in cvs  %}
+                    <div class="d-flex flex-column justify-content-center" style="width: 15%;">
+                        <a href="{% url 'add_cv' cv.pk %}">
+                            <i class="fas fa-folder-open" style="color: black"></i>
+                            <span style="color: black">
+                                {{ cv.name }}
+                            </span>
+                        </a>
+                    </div>
+                {% endfor %}
+                {% if cvs.length == 0 %}
+                    No CV found. Create new one with <a>Add</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

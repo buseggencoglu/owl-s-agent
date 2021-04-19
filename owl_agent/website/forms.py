@@ -7,7 +7,7 @@ from django.contrib.auth import (
     login,
     logout,
 )
-from .models import Company_Profile, Job_Seeker_Profile
+from .models import Company_Profile, Job_Seeker_Profile, CV
 
 User = get_user_model()
 
@@ -54,3 +54,22 @@ class EditCompanyProfileForm(forms.Form):
     class Meta:
         model = Company_Profile
         fields = ('company_name', 'email', 'foundation_year', 'tax_id', 'website')
+
+
+class CVForm(forms.ModelForm):
+    class Meta:
+        model = CV
+        fields = [
+            'name',
+            'almater',
+            'graduation_date',
+            'internships',
+            'gpa',
+            'experience_field',
+            'extras',
+            'interests'
+        ]
+        widgets = {
+            'graduation_date': forms.DateInput(attrs={'class': 'form-control',
+                                                      'type': 'date'}),
+        }
