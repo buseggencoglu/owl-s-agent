@@ -30,12 +30,11 @@ Owls Agent Login Page
                             <div class="col-md-12 mb-3 mb-md-0">
                                 <label class="text-black" for="">Name</label>
                                 <input type="text" class="form-control" name="name" id="" value="{{data.name}}"
-                                       placeholder="{{data.name}}">
+                                       placeholder="{{data.name}}" required>
                             </div>
                             <div class="col-md-12 mb-3 mb-md-0">
                                 <label class="text-black" for="">Surname</label>
-                                <input type="text" class="form-control" name="surname" value="{{data.surname}}"
-                                >
+                                <input type="text" class="form-control" name="surname" value="{{data.surname}}" required>
                             </div>
                             <div class="col-md-12 mb-3 mb-md-0">
                                 <label class="text-black" for="">Birth date</label>
@@ -56,7 +55,7 @@ Owls Agent Login Page
                                 <label class="text-black" for="">Gender</label><br>
 
                                 {% if data.gender == 'M' %}
-                                <input type="radio" name="gender" value="M" checked>
+                                <input type="radio" name="gender" value="M" checked required>
                                 <strong><label>Male</label></strong>
                                 {% else %}
                                 <input type="radio" name="gender" id="male" value="M">
@@ -64,7 +63,7 @@ Owls Agent Login Page
                                 {% endif %}
 
                                 {% if data.gender == 'F' %}
-                                <input type="radio" name="gender" value="F" checked>
+                                <input type="radio" name="gender" value="F" checked required>
                                 <strong><label>Female</label></strong>
                                 {% else %}
                                 <input type="radio" name="gender" id="female" value="F">
@@ -72,10 +71,10 @@ Owls Agent Login Page
                                 {% endif %}
 
                                 {% if data.gender == 'O' %}
-                                <input type="radio" name="gender" value="O" checked>
+                                <input type="radio" name="gender" value="O" checked required>
                                 <strong><label>Other</label></strong>
                                 {% else %}
-                                <input type="radio" name="gender" id="other" value="F">
+                                <input type="radio" name="gender" id="other" value="O">
                                 <label>Other</label>
                                 {% endif %}
                             </div>

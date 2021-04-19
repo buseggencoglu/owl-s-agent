@@ -34,9 +34,16 @@ Owls Agent Login Page
                         <input type="text" class="form-control" name="portfolio_link"
                                value="{{data.portfolio_link}}" readonly>
                     </div>
+
                     <div class="col-md-12 mb-3 mb-md-0">
-                        <label class="text-black" for="">Gender</label><br>
-                        <span>{{ data.gender }}</span>
+                        <label class="text-black" for="">Gender</label>:
+                        {% if data.gender == 'M' %}
+                        <span>Male</span>
+                        {% elif data.gender == 'F' %}
+                        <span>Female</span>
+                        {% elif data.gender == 'O' %}
+                        <span>Other</span>
+                        {% endif %}
                     </div>
                 </div>
             </div>
