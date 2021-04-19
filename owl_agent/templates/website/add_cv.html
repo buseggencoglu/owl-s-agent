@@ -1,0 +1,31 @@
+{% extends 'website/base.html' %}
+{% block title %}
+Owls Agent Login Page
+{% endblock %}
+
+{% load static %}
+{% block content %}
+
+{% load crispy_forms_tags %}
+
+<div class="container justify-content-center">
+    <div class="card w-100">
+        <div class="card-header">
+            Add CV
+        </div>
+        <div class="card-body w-100">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form | crispy }}
+                <button type="submit" id="login-page-button" class="genric-btn success circle mt-1">SAVE</button>
+                {% if pk != None %}
+                    <a href="{% url 'delete_cv' pk %}">
+                        <button type="button" id="login-page-button" class="genric-btn danger circle">DELETE</button>
+                    </a>
+                {% endif %}
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

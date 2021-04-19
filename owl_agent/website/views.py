@@ -5,8 +5,8 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
-from .forms import Job_Seeker_RegisterForm, RoleChooseForm, Company_RegisterForm, EditCompanyProfileForm
-from .models import Job_Seeker_Profile, Company_Profile, Job_Offer
+from .forms import Job_Seeker_RegisterForm, RoleChooseForm, Company_RegisterForm, EditCompanyProfileForm, CVForm
+from .models import Job_Seeker_Profile, Company_Profile, Job_Offer, CV
 from datetime import date
 from django.contrib import messages
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -262,6 +262,46 @@ def login_view(request):
 def logout_view(request):
     logout(request)
     return redirect('home')
+
+
+def add_cv(request, pk=None):
+    owner = Job_Seeker_Profile.objects.get(user=request.user)
+    data = request.POST or None
+    instance = None
+    if pk is not None:
+        instance = CV.objects.get(pk=pk, owner=owner)
+
+    form = CVForm(data, instance=instance)
+    if request.method == 'POST':
+        if form.is_valid():
+            cv = form.save(commit=False)
+            cv.owner = owner
+            cv.save()
+            return redirect('my_profile')
+    context = {
+        'form': form,
+        'pk': pk
+    }
+    return render(request, 'website/add_cv.html', context)
+
+
+def delete_cv(request, pk):
+    instance = CV.objects.get(pk=pk)
+    instance.delete()
+    return redirect('my_profile')
+
+
+def my_profile(request):
+    context = {}
+    data = Job_Seeker_Profile.objects.get(user=request.user)
+    cvs = CV.objects.filter(owner=data)
+    context['data'] = data
+    context['cvs'] = cvs
+
+    if request.method == 'POST':
+        pass
+
+    return render(request, 'website/my_profile.html', context)
 
 
 def edit_profile_job_seeker(request):

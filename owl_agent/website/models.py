@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib.auth.models import User
 from django.db import models
 
@@ -38,15 +39,15 @@ class Job_Seeker_Profile(User_Profile):
     image = models.ImageField(upload_to='job_seeker_image', null=True, blank=True, default='job_seeker_image/default')
 
 
-
 class CV(models.Model):
+    name = models.CharField(max_length=20)
     almater = models.CharField(max_length=100)
     graduation_date = models.DateField()
-    internships = models.CharField(max_length=2000)
+    internships = models.TextField(max_length=2000)
     gpa = models.DecimalField(max_digits=20, decimal_places=2)
-    experience_field = models.CharField(max_length=500)
-    extras = models.CharField(max_length=1000)
-    interests = models.CharField(max_length=1000)
+    experience_field = models.TextField(max_length=500)
+    extras = models.TextField(max_length=1000)
+    interests = models.TextField(max_length=1000)
     owner = models.ForeignKey(Job_Seeker_Profile, on_delete=models.CASCADE, related_name='%(class)s_owner')
 
 
