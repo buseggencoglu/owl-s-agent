@@ -217,7 +217,7 @@ def post_job(request):
         education = request.POST['education']
         location = request.POST['location']
         type = request.POST['type']
-        is_experience = True if request.POST['is_experience'] == "true" else False
+        is_experience = True if request.POST.get('is_experience', "true") == "true" else False
         salary = request.POST['salary']
         start_date = request.POST['start_date']
         company = Company_Profile.objects.get(user=request.user)
