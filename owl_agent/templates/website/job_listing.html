@@ -51,13 +51,17 @@ Owls Agent Job Listing Page
                                </div>
                                 <!-- Select job items start -->
                                 <div class="select-job-items2">
-                                    <select name="select">
-                                        <option value="">All Category</option>
-                                        <option value="">Category 1</option>
-                                        <option value="">Category 2</option>
-                                        <option value="">Category 3</option>
-                                        <option value="">Category 4</option>
-                                    </select>
+                                    <select id="categories" name="categories">
+                                        <option value="all">All</option>
+                                  <option value="design">Design & Creative</option>
+                                    <option value="design_development">Design & Development</option>
+                                  <option value="sales_marketing">Sales & Marketing</option>
+                                    <option value="mobile_app">Mobile Application</option>
+                                    <option value="construction">Construction</option>
+                                    <option value="it">Information Technology</option>
+                                    <option value="real_estate">Real Estate</option>
+                                    <option value="content_writer">Content Writer</option>
+                                </select>
                                 </div>
                                 <!--  Select job items End-->
                                 <!-- select-Categories start -->
@@ -66,7 +70,7 @@ Owls Agent Job Listing Page
                                         <h4>Job Type</h4>
                                     </div>
                                     <label class="container">Full Time
-                                        <input type="checkbox" >
+                                        <input type="checkbox" checked="checked active">
                                         <span class="checkmark"></span>
                                     </label>
                                     <label class="container">Part Time
@@ -74,11 +78,11 @@ Owls Agent Job Listing Page
                                         <span class="checkmark"></span>
                                     </label>
                                     <label class="container">Remote
-                                        <input type="checkbox">
+                                        <input type="checkbox" checked="checked active">
                                         <span class="checkmark"></span>
                                     </label>
                                     <label class="container">Freelance
-                                        <input type="checkbox">
+                                        <input type="checkbox" checked="checked active">
                                         <span class="checkmark"></span>
                                     </label>
                                 </div>
@@ -91,12 +95,12 @@ Owls Agent Job Listing Page
                                </div>
                                 <!-- Select job items start -->
                                 <div class="select-job-items2">
-                                    <select name="select">
+                                    <select id="location" name="location">
                                         <option value="">Anywhere</option>
-                                        <option value="">Category 1</option>
-                                        <option value="">Category 2</option>
-                                        <option value="">Category 3</option>
-                                        <option value="">Category 4</option>
+                                        <option value="istanbul">İstanbul</option>
+                                  <option value="ankara">Ankara</option>
+                                  <option value="izmir">İzmir</option>
+                                  <option value="bursa">Bursa</option>
                                     </select>
                                 </div>
                                 <!--  Select job items End-->
@@ -105,8 +109,12 @@ Owls Agent Job Listing Page
                                     <div class="small-section-tittle2">
                                         <h4>Experience</h4>
                                     </div>
+                                    <label class="container" >No experience
+                                        <input type="checkbox" checked="checked active">
+                                        <span class="checkmark"></span>
+                                    </label>
                                     <label class="container">1-2 Years
-                                        <input type="checkbox" >
+                                        <input type="checkbox" checked="checked active">
                                         <span class="checkmark"></span>
                                     </label>
                                     <label class="container">2-3 Years
@@ -114,11 +122,11 @@ Owls Agent Job Listing Page
                                         <span class="checkmark"></span>
                                     </label>
                                     <label class="container">3-6 Years
-                                        <input type="checkbox">
+                                        <input type="checkbox" checked="checked active">
                                         <span class="checkmark"></span>
                                     </label>
                                     <label class="container">6-more..
-                                        <input type="checkbox">
+                                        <input type="checkbox" checked="checked active">
                                         <span class="checkmark"></span>
                                     </label>
                                 </div>
@@ -132,7 +140,7 @@ Owls Agent Job Listing Page
                                         <h4>Posted Within</h4>
                                     </div>
                                     <label class="container">Any
-                                        <input type="checkbox" >
+                                        <input type="checkbox" checked="checked active">
                                         <span class="checkmark"></span>
                                     </label>
                                     <label class="container">Today
@@ -140,19 +148,19 @@ Owls Agent Job Listing Page
                                         <span class="checkmark"></span>
                                     </label>
                                     <label class="container">Last 2 days
-                                        <input type="checkbox">
+                                        <input type="checkbox" checked="checked active">
                                         <span class="checkmark"></span>
                                     </label>
                                     <label class="container">Last 3 days
-                                        <input type="checkbox">
+                                        <input type="checkbox" checked="checked active">
                                         <span class="checkmark"></span>
                                     </label>
                                     <label class="container">Last 5 days
-                                        <input type="checkbox">
+                                        <input type="checkbox" checked="checked active">
                                         <span class="checkmark"></span>
                                     </label>
                                     <label class="container">Last 10 days
-                                        <input type="checkbox">
+                                        <input type="checkbox" checked="checked active">
                                         <span class="checkmark"></span>
                                     </label>
                                 </div>
