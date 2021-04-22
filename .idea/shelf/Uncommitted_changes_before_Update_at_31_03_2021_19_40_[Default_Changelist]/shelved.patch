@@ -1,0 +1,158 @@
+Index: owl_agent/website/urls.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.urls import path\nfrom . import views\n\nurlpatterns = [\n    path('', views.home_view, name='home'),\n    path('register/', views.role_choose, name='register'),\n    path('register_job_seeker/', views.register_Job_Seeker, name='register_job_seeker'),\n    path('register_company/', views.register_Company, name='register_company'),\n    path('sent/', views.activation_sent_view, name=\"sent\"),\n    path('about/', views.about_view, name='about'),\n    path('contact/', views.contact_view, name='contact'),\n    path('job-details/', views.job_details_view, name='job-details'),\n    path('job-listing/', views.job_listing_view, name='job-listing'),\n    path('blog/', views.blog_view, name='blog'),\n    path('blog/single/', views.single_blog_view, name='single-blog'),\n    path('elements/', views.elements_view, name='elements'),\n    path('login/', views.login_view, name='login'),\n    path('logout/', views.logout_view, name='logout'),\n]\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- owl_agent/website/urls.py	(revision 2ad91c9bc00432c40e9f1f45265cefa0d9af658f)
++++ owl_agent/website/urls.py	(date 1617207918799)
+@@ -16,4 +16,5 @@
+     path('elements/', views.elements_view, name='elements'),
+     path('login/', views.login_view, name='login'),
+     path('logout/', views.logout_view, name='logout'),
++    path('company_profile/<int:pk>', views.company_profile, name='company_profile'),
+ ]
+Index: owl_agent/website/views.py
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>from django.contrib.auth.decorators import login_required\nfrom django.http import HttpResponseRedirect\nfrom django.shortcuts import render, redirect\nfrom django.contrib.auth.models import User\nfrom .forms import Job_Seeker_RegisterForm, RoleChooseForm, Company_RegisterForm\nfrom .models import Job_Seeker_Profile, Company_Profile\nfrom datetime import date\nfrom django.contrib import messages\n\nfrom django.contrib.auth import (\n    authenticate,\n    login,\n    logout,\n    get_user_model,\n)\n\n\n# Create your views here.\n# @login_required(login_url='login')\ndef home_view(request):\n    return render(request, 'website/index.html')\n\n\ndef about_view(request):\n    return render(request, 'website/about.html')\n\n\ndef contact_view(request):\n    return render(request, 'website/contact.html')\n\n\ndef job_details_view(request):\n    return render(request, 'website/job_details.html')\n\n\ndef job_listing_view(request):\n    return render(request, 'website/job_listing.html')\n\n\ndef blog_view(request):\n    return render(request, 'website/blog.html')\n\n\ndef single_blog_view(request):\n    return render(request, 'website/single-blog.html')\n\n\ndef elements_view(request):\n    return render(request, 'website/elements.html')\n\n\ndef role_choose(request):\n    template = 'website/role_choose.html'\n\n    if request.method == \"POST\":\n        form = RoleChooseForm(request.POST)\n        if form.is_valid():\n            if form.cleaned_data['type'] == 'job_seeker':\n                return HttpResponseRedirect('/register_job_seeker')\n            else:\n                return HttpResponseRedirect('/register_company')\n\n        return redirect('sent')\n    else:\n        form = RoleChooseForm()\n    return render(request, template, {\"form\": form})\n\n\ndef register_Job_Seeker(request):\n    # if this is a POST request we need to process the form data\n    template = 'website/register_Job_Seeker.html'\n\n    if request.method == \"POST\":\n        form = Job_Seeker_RegisterForm(request.POST)\n        if form.is_valid():\n\n            if User.objects.filter(username=form.cleaned_data['username']).exists():\n                return render(request, template, {\n                    'form': form,\n                    'error_message': 'Username already exists.'\n                })\n            # if (date.today() - form.cleaned_data['birthDate']) < timedelta(days=18 * 365):\n            #     return render(request, template, {\n            #         'form': form,\n            #         'error_message': 'Age should be greater than 18.'\n            #     })\n            if Job_Seeker_Profile.objects.filter(portfolio_link=form.cleaned_data['portfolio_link']).exists():\n                return render(request, template, {\n                    'form': form,\n                    'error_message': 'This portfolio link already exists.'\n                })\n\n            user = form.save()\n            Job_Seeker_Profile.objects.create(user=user, name=form.cleaned_data['name'],\n                                              surname=form.cleaned_data['surname'],\n                                              birth_date=form.cleaned_data['birth_date'],\n                                              carrier_list=form.cleaned_data['carrier_list'],\n                                              portfolio_link=form.cleaned_data['portfolio_link'])\n            user.is_active = True\n            user.save()\n\n            # Login the user\n            login(request, user)\n            return redirect('sent')\n\n    else:\n        form = Job_Seeker_RegisterForm()\n    return render(request, template, {\"form\": form})\n\n\ndef register_Company(request):\n    # if this is a POST request we need to process the form data\n    template = 'website/register_Company.html'\n\n    if request.method == \"POST\":\n        form = Company_RegisterForm(request.POST)\n        if form.is_valid():\n\n            if User.objects.filter(username=form.cleaned_data['username']).exists():\n                return render(request, template, {\n                    'form': form,\n                    'error_message': 'Username already exists.'\n                })\n            if (form.cleaned_data['foundation_year']) >= date.today():\n                return render(request, template, {\n                    'form': form,\n                    'error_message': 'The foundation year cant be in future'\n                })\n            if Company_Profile.objects.filter(tax_id=form.cleaned_data['tax_id']).exists():\n                return render(request, template, {\n                    'form': form,\n                    'error_message': 'This tax id already exists.'\n                })\n\n            user = form.save()\n            Company_Profile.objects.create(user=user, company_name=form.cleaned_data['company_name'],\n                                           tax_id=form.cleaned_data['tax_id'],\n                                           website=form.cleaned_data['website'],\n                                           foundation_year=form.cleaned_data['foundation_year'])\n            user.is_active = False\n            user.save()\n\n            return redirect('sent')\n\n    else:\n        form = Company_RegisterForm()\n    return render(request, template, {\"form\": form})\n\n\ndef activation_sent_view(request):\n    return render(request, 'website/activation_sent.html')\n\n\ndef login_view(request):\n    if request.user.is_authenticated:\n        return redirect('home')\n    else:\n        if request.method == 'POST':\n            username = request.POST.get('username')\n            password = request.POST.get('password')\n\n            user = authenticate(request, username=username, password=password)\n\n            if user is not None:\n                login(request, user)\n                return redirect('home')\n            else:\n                messages.error(request, 'Username OR password is incorrect')\n\n        context = {}\n        return render(request, 'website/login.html', context)\n\n\ndef logout_view(request):\n    logout(request)\n    return redirect('home')\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- owl_agent/website/views.py	(revision 2ad91c9bc00432c40e9f1f45265cefa0d9af658f)
++++ owl_agent/website/views.py	(date 1617208051317)
+@@ -174,3 +174,9 @@
+ def logout_view(request):
+     logout(request)
+     return redirect('home')
++
++
++def company_profile(request, pk):
++    profile = Company_Profile.objects.get(user_id = pk)
++    return render(request,'website/company_profile.html',{'profile': profile})
++
+Index: owl_agent/templates/website/base.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>{% load static %}\n<!--<!doctype html>-->\n<html class=\"no-js\" lang=\"zxx\">\n<head>\n    <meta charset=\"utf-8\">\n    <meta http-equiv=\"x-ua-compatible\" content=\"ie=edge\">\n\n    <title>{% block title %}{% endblock %}</title>\n\n\n    <meta name=\"description\" content=\"\">\n    <meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n    <link rel=\"shortcut icon\" type=\"image/x-icon\" href=\"{% static 'img/favicon.ico'%}\">\n\n    <!-- CSS here -->\n    <link rel=\"stylesheet\" href=\"{% static 'css/bootstrap.min.css'%}\">\n    <link rel=\"stylesheet\" href=\"{% static 'css/owl.carousel.min.css'%}\">\n    <link rel=\"stylesheet\" href=\"{% static 'css/flaticon.css'%}\">\n    <link rel=\"stylesheet\" href=\"{% static 'css/price_rangs.css'%}\">\n    <link rel=\"stylesheet\" href=\"{% static 'css/slicknav.css'%}\">\n    <link rel=\"stylesheet\" href=\"{% static 'css/animate.min.css'%}\">\n    <link rel=\"stylesheet\" href=\"{% static 'css/magnific-popup.css'%}\">\n    <link rel=\"stylesheet\" href=\"{% static 'css/fontawesome-all.min.css'%}\">\n    <link rel=\"stylesheet\" href=\"{% static 'css/themify-icons.css'%}\">\n    <link rel=\"stylesheet\" href=\"{% static 'css/slick.css'%}\">\n    <link rel=\"stylesheet\" href=\"{% static 'css/nice-select.css'%}\">\n    <link rel=\"stylesheet\" href=\"{% static 'css/style.css'%}\">\n    <link rel=\"stylesheet\" href=\"{% static 'css/responsive.css'%}\">\n\n    <style>\n        #logout_id {\n            width: 51%;\n            border-radius: 50px;\n            background-color: darkblue;\n        }\n\n    </style>\n\n</head>\n\n<body>\n\n<header>\n    <!-- Header Start -->\n    <div class=\"header-area header-transparrent\">\n        <div class=\"headder-top header-sticky\">\n            <div class=\"container\">\n                <div class=\"row align-items-center\">\n                    <div class=\"col-lg-3 col-md-2\">\n                        <!-- Logo -->\n                        <div class=\"logo\">\n                            <a href=\"{% url 'home' %}\"><img src=\"{% static 'img/logo/logo.png' %} \" width=\"200\"\n                                                            height=\"100\" alt=\"\"></a>\n                        </div>\n                    </div>\n                    <div class=\"col-lg-9 col-md-9\">\n                        <div class=\"menu-wrapper\">\n                            <!-- Main-menu -->\n                            <div class=\"main-menu\">\n                                <nav class=\"d-none d-lg-block\">\n                                    <ul id=\"navigation\">\n                                        <li><a href=\"{% url 'home' %}\">Home</a></li>\n                                        <li><a href=\"{% url 'job-listing' %}\">Find a Jobs </a></li>\n                                        <li><a href=\"{% url 'about' %}\">About</a></li>\n                                        <li><a href=\"#\">Page</a>\n                                            <ul class=\"submenu\">\n                                                <li><a href=\"{% url 'blog' %}\">Blog</a></li>\n                                                <li><a href=\"{% url 'single-blog' %}\">Blog Details</a></li>\n                                                <li><a href=\"{% url 'elements' %}\">Elements</a></li>\n                                                <li><a href=\"{% url 'job-details' %}\">job Details</a></li>\n                                            </ul>\n                                        </li>\n                                        <li><a href=\"{% url 'contact' %}\">Contact</a></li>\n                                    </ul>\n                                </nav>\n                            </div>\n                            <!-- Header-btn -->\n                            <div class=\"header-btn d-none f-right d-lg-block\">\n                                {% if user.is_authenticated %}\n                                <span>Hello, {{user.username}} </span>\n                                <a id=\"logout_id\" class=\"btn btn-outline-danger\" href=\"{% url 'logout' %}\">Logout</a>\n                                {% else %}\n                                <a href=\"{% url 'register' %}\" class=\"btn head-btn1\">Register</a>\n                                <a href=\"{% url 'login' %}\" class=\"btn head-btn2\">Login</a>\n                                {% endif %}\n                            </div>\n                        </div>\n                    </div>\n\n                    <!-- Mobile Menu -->\n                    <div class=\"col-12\">\n                        <div class=\"mobile_menu d-block d-lg-none\"></div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <!-- Header End -->\n</header>\n\n{#Content#}\n\n{% block content %}\n{% endblock %}\n\n{#End Content#}\n\n\n<footer>\n    <!-- Footer Start-->\n    <div class=\"footer-area footer-bg footer-padding\">\n        <div class=\"container\">\n            <div class=\"row d-flex justify-content-between\">\n                <div class=\"col-xl-3 col-lg-3 col-md-4 col-sm-6\">\n                    <div class=\"single-footer-caption mb-50\">\n                        <div class=\"single-footer-caption mb-30\">\n                            <div class=\"footer-tittle\">\n                                <h4>About Us</h4>\n                                <div class=\"footer-pera\">\n                                    <p>Heaven frucvitful doesn't cover lesser dvsays appear creeping seasons so\n                                        behold.</p>\n                                </div>\n                            </div>\n                        </div>\n\n                    </div>\n                </div>\n                <div class=\"col-xl-3 col-lg-3 col-md-4 col-sm-5\">\n                    <div class=\"single-footer-caption mb-50\">\n                        <div class=\"footer-tittle\">\n                            <h4>Contact Info</h4>\n                            <ul>\n                                <li>\n                                    <p>Address :Your address goes\n                                        here, your demo address.</p>\n                                </li>\n                                <li><a href=\"#\">Phone : +8880 44338899</a></li>\n                                <li><a href=\"#\">Email : info@colorlib.com</a></li>\n                            </ul>\n                        </div>\n\n                    </div>\n                </div>\n                <div class=\"col-xl-3 col-lg-3 col-md-4 col-sm-5\">\n                    <div class=\"single-footer-caption mb-50\">\n                        <div class=\"footer-tittle\">\n                            <h4>Important Link</h4>\n                            <ul>\n                                <li><a href=\"#\"> View Project</a></li>\n                                <li><a href=\"#\">Contact Us</a></li>\n                                <li><a href=\"#\">Testimonial</a></li>\n                                <li><a href=\"#\">Proparties</a></li>\n                                <li><a href=\"#\">Support</a></li>\n                            </ul>\n                        </div>\n                    </div>\n                </div>\n                <div class=\"col-xl-3 col-lg-3 col-md-4 col-sm-5\">\n                    <div class=\"single-footer-caption mb-50\">\n                        <div class=\"footer-tittle\">\n                            <h4>Newsletter</h4>\n                            <div class=\"footer-pera footer-pera2\">\n                                <p>Heaven fruitful doesn't over lesser in days. Appear creeping.</p>\n                            </div>\n                            <!-- Form -->\n                            <div class=\"footer-form\">\n                                <div id=\"mc_embed_signup\">\n                                    <form target=\"_blank\"\n                                          action=\"https://spondonit.us12.list-manage.com/subscribe/post?u=1462626880ade1ac87bd9c93a&amp;id=92a4423d01\"\n                                          method=\"get\" class=\"subscribe_form relative mail_part\">\n                                        <input type=\"email\" name=\"email\" id=\"newsletter-form-email\"\n                                               placeholder=\"Email Address\"\n                                               class=\"placeholder hide-on-focus\" onfocus=\"this.placeholder = ''\"\n                                               onblur=\"this.placeholder = ' Email Address '\">\n                                        <div class=\"form-icon\">\n                                            <button type=\"submit\" name=\"submit\" id=\"newsletter-submit\"\n                                                    class=\"email_icon newsletter-submit button-contactForm\"><img\n                                                    src=\"{% static 'img/icon/form.png'%}\" alt=\"\"></button>\n                                        </div>\n                                        <div class=\"mt-10 info\"></div>\n                                    </form>\n                                </div>\n                            </div>\n                        </div>\n                    </div>\n                </div>\n            </div>\n            <!--  -->\n            <div class=\"row footer-wejed justify-content-between\">\n                <div class=\"col-xl-3 col-lg-3 col-md-4 col-sm-6\">\n                    <!-- logo -->\n                    <div class=\"footer-logo mb-20\">\n                        <a href=\"{% url 'home' %}\"><img src=\"{% static 'img/logo/logo2_footer.png'%}\" alt=\"\"></a>\n                    </div>\n                </div>\n                <div class=\"col-xl-3 col-lg-3 col-md-4 col-sm-5\">\n                    <div class=\"footer-tittle-bottom\">\n                        <span>5000+</span>\n                        <p>Talented Hunter</p>\n                    </div>\n                </div>\n                <div class=\"col-xl-3 col-lg-3 col-md-4 col-sm-5\">\n                    <div class=\"footer-tittle-bottom\">\n                        <span>451</span>\n                        <p>Talented Hunter</p>\n                    </div>\n                </div>\n                <div class=\"col-xl-3 col-lg-3 col-md-4 col-sm-5\">\n                    <!-- Footer Bottom Tittle -->\n                    <div class=\"footer-tittle-bottom\">\n                        <span>568</span>\n                        <p>Talented Hunter</p>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <!-- footer-bottom area -->\n    <div class=\"footer-bottom-area footer-bg\">\n        <div class=\"container\">\n            <div class=\"footer-border\">\n                <div class=\"row d-flex justify-content-between align-items-center\">\n                    <div class=\"col-xl-10 col-lg-10 \">\n                        <div class=\"footer-copy-right\">\n                            <p><!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->\n                                Copyright &copy;<script>document.write(new Date().getFullYear());</script>\n                                All rights reserved | This template is made with <i class=\"fa fa-heart\"\n                                                                                    aria-hidden=\"true\"></i> by <a\n                                        href=\"https://colorlib.com\" target=\"_blank\">Colorlib</a>\n                                <!-- Link back to Colorlib can't be removed. Template is licensed under CC BY 3.0. -->\n                            </p>\n                        </div>\n                    </div>\n                    <div class=\"col-xl-2 col-lg-2\">\n                        <div class=\"footer-social f-right\">\n                            <a href=\"#\"><i class=\"fab fa-facebook-f\"></i></a>\n                            <a href=\"#\"><i class=\"fab fa-twitter\"></i></a>\n                            <a href=\"#\"><i class=\"fas fa-globe\"></i></a>\n                            <a href=\"#\"><i class=\"fab fa-behance\"></i></a>\n                        </div>\n                    </div>\n                </div>\n            </div>\n        </div>\n    </div>\n    <!-- Footer End-->\n</footer>\n\n<!-- JS here -->\n\n<!-- All JS Custom Plugins Link Here here -->\n<script src=\"{% static 'js/vendor/modernizr-3.5.0.min.js'%}\"></script>\n<!-- Jquery, Popper, Bootstrap -->\n<script src=\"{% static 'js/vendor/jquery-1.12.4.min.js'%}\"></script>\n<script src=\"{% static 'js/popper.min.js'%}\"></script>\n<script src=\"{% static 'js/bootstrap.min.js'%}\"></script>\n<!-- Jquery Mobile Menu -->\n<script src=\"{% static 'js/jquery.slicknav.min.js'%}\"></script>\n\n<!-- Jquery Slick , Owl-Carousel Plugins -->\n<script src=\"{% static 'js/owl.carousel.min.js'%}\"></script>\n<script src=\"{% static 'js/slick.min.js'%}\"></script>\n<script src=\"{% static 'js/price_rangs.js'%}\"></script>\n\n<!-- One Page, Animated-HeadLin -->\n<script src=\"{% static 'js/wow.min.js'%}\"></script>\n<script src=\"{% static 'js/animated.headline.js'%}\"></script>\n<script src=\"{% static 'js/jquery.magnific-popup.js'%}\"></script>\n\n<!-- Scrollup, nice-select, sticky -->\n<script src=\"{% static 'js/jquery.scrollUp.min.js'%}\"></script>\n<script src=\"{% static 'js/jquery.nice-select.min.js'%}\"></script>\n<script src=\"{% static 'js/jquery.sticky.js'%}\"></script>\n\n<!-- contact js -->\n<script src=\"{% static 'js/contact.js'%}\"></script>\n<script src=\"{% static 'js/jquery.form.js'%}\"></script>\n<script src=\"{% static 'js/jquery.validate.min.js'%}\"></script>\n<script src=\"{% static 'js/mail-script.js'%}\"></script>\n<script src=\"{% static 'js/jquery.ajaxchimp.min.js'%}\"></script>\n\n<!-- Jquery Plugins, main Jquery -->\n<script src=\"{% static 'js/plugins.js'%}\"></script>\n<script src=\"{% static 'js/main.js'%}\"></script>\n\n</body>\n</html>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- owl_agent/templates/website/base.html	(revision 2ad91c9bc00432c40e9f1f45265cefa0d9af658f)
++++ owl_agent/templates/website/base.html	(date 1617208107634)
+@@ -71,6 +71,9 @@
+                                             </ul>
+                                         </li>
+                                         <li><a href="{% url 'contact' %}">Contact</a></li>
++                                        {% if user_type == 'company' %}
++                                        <li><a href="{% url 'company_profile' pk=user.id  %}">Profile</a></li>
++                                        {% endif %}
+                                     </ul>
+                                 </nav>
+                             </div>
+Index: owl_agent/templates/website/company_profile.html
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- owl_agent/templates/website/company_profile.html	(date 1617208734238)
++++ owl_agent/templates/website/company_profile.html	(date 1617208734238)
+@@ -0,0 +1,96 @@
++{% extends 'website/base.html' %}
++{% block title %}
++Profile
++{% endblock %}
++
++{% load static %}
++{% block content %}
++<br><br>
++
++<div class="container">
++    <div class="main-body">
++
++
++        <nav aria-label="breadcrumb" class="main-breadcrumb">
++            <ol class="breadcrumb">
++                <li class="breadcrumb-item active" aria-current="page">Profile</li>
++            </ol>
++        </nav>
++
++        <div class="row gutters-sm">
++            <div class="col-md-4 mb-3">
++                <div class="card">
++                    <div class="card-body">
++                        <div class="d-flex flex-column align-items-center text-center">
++                            <img src="https://assets.stickpng.com/images/585e4bf3cb11b227491c339a.png" alt="Admin"
++                                 class="rounded-circle" width="150">
++                            <div class="mt-3">
++                                <h4><b>{{profile.user.username}}</b></h4>
++                                <p class="text-secondary mb-1"> {{profile.user.type}}</p>
++
++                                <button type="submit" class="btn btn-info">Edit</button>
++                                </a>
++                            </div>
++                        </div>
++                    </div>
++                </div>
++                <div class="card mt-3">
++                </div>
++            </div>
++
++            <div class="col-md-8">
++                <div class="card mb-3">
++                    <div class="card-body">
++                        <div class="row">
++                            <div class="col-sm-3">
++                                <h6 class="mb-0"><b>User Name</b></h6>
++                            </div>
++                            <div class="col-sm-9 text-secondary">
++                                {{profile.user.username}}
++                            </div>
++                        </div>
++                        <hr>
++                        <div class="row">
++                            <div class="col-sm-3">
++                                <h6 class="mb-0"><b>Company Name</b></h6>
++                            </div>
++                            <div class="col-sm-9 text-secondary">
++                                {{profile.company_name}}
++                            </div>
++                        </div>
++                        <hr>
++                        <div class="row">
++                            <div class="col-sm-3">
++                                <h6 class="mb-0"><b>Foundation Year</b></h6>
++                            </div>
++                            <div class="col-sm-9 text-secondary">
++                                {{profile.foundation_year}}
++                            </div>
++                        </div>
++                        <hr>
++                        <div class="row">
++                            <div class="col-sm-3">
++                                <h6 class="mb-0"><b>Tax Id</b></h6>
++                            </div>
++                            <div class="col-sm-9 text-secondary">
++                                {{profile.tax_id}}
++                            </div>
++                        </div>
++                        <hr>
++                        <div class="row">
++                            <div class="col-sm-3">
++                                <h6 class="mb-0"><b>Website</b></h6>
++                            </div>
++                            <div class="col-sm-9 text-secondary">
++                                {{profile.website}}
++                            </div>
++                        </div>
++                    </div>
++                </div>
++            </div>
++        </div>
++    </div>
++</div>
++</body>
++</html>
++{% endblock %}
+\ No newline at end of file
