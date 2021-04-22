@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="{% static 'css/nice-select.css'%}">
     <link rel="stylesheet" href="{% static 'css/style.css'%}">
     <link rel="stylesheet" href="{% static 'css/responsive.css'%}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <style>
         #logout_id {
@@ -33,6 +34,42 @@
             border-radius: 50px;
             background-color: darkblue;
         }
+
+        .collapsible {
+            background-color: #ff0066;
+            color: white;
+            cursor: pointer;
+            padding: 18px;
+            width: 50%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            }
+
+        .active, .collapsible:hover {
+            background-color: #000080;
+            }
+
+        .content {
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            background-color: #f1f1f1;
+            }
+
+        table {
+            font-family: arial, sans-serif;
+            width: 50%;
+        }
+
+        td, th {
+            text-align: left;
+            padding: 8px;
+        }
+
+
+
 
     </style>
 
@@ -61,17 +98,26 @@
                                     <ul id="navigation">
                                         <li><a href="{% url 'home' %}">Home</a></li>
 
-                                        {% if user.is_authenticated  %}
-                                            {% if user_type == 'admin' %}
+                                        {% if user.is_authenticated %}
+                                        {% if user_type == 'admin' %}
 
 
-                                            <li><a href="/dashboard">Dashboard</a></li>
+                                        <li><a href="/dashboard">Dashboard</a></li>
 
-                                             {% endif %}
+                                        {% endif %}
+                                        {% endif %}
+
+                                        {% if user.is_authenticated %}
+                                        {% if user_type == 'admin' %}
+                                        <li><a href="/dashboardList">Listing</a></li>
+                                        {% elif user_type == 'company' %}
+                                        <li><a href="{% url 'post_job' %}">Post Job </a></li>
+                                        {% else %}
+                                        <li><a href="{% url 'job-listing' %}">Find a Jobs </a></li>
+                                        {%endif%}
                                         {% endif %}
 
 
-                                        <li><a href="{% url 'job-listing' %}">Find a Jobs </a></li>
                                         <li><a href="{% url 'about' %}">About</a></li>
                                         <li><a href="#">Page</a>
                                             <ul class="submenu">
@@ -91,11 +137,41 @@
                             <!-- Header-btn -->
                             <div class="header-btn d-none f-right d-lg-block">
                                 {% if user.is_authenticated %}
-                                <span>Hello, {{user.username}} </span>
-                                <a id="logout_id" class="btn btn-outline-danger" href="{% url 'logout' %}">Logout</a>
+
+                                <div class="dropdown">
+                                    <span>
+                                        Hello,
+                                    </span>
+                                    {% if user_type == 'job_seeker' %}
+                                    <a href="{% url 'my_profile' %}" style="color: #007bff;">
+                                        <span>{{user.username}}</span>
+                                    </a>
+                                    {% elif user_type == 'company' %}
+                                    <a href="{% url 'company_profile'  pk=user.id %}" style="color: #007bff;">
+                                        <span>{{user.username}}</span>
+                                    </a>
+                                    {% else %}
+                                    <span>{{user.username}}</span>
+                                    {% endif %}
+                                    <a class="genric-btn info circle dropdown-toggle" href="#" role="button"
+                                       id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
+                                       aria-expanded="false">
+                                        Menu
+                                    </a>
+
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                                        {% if user_type == 'job_seeker' %}
+                                        <a class="dropdown-item" href="{% url 'edit_profile_job_seeker' %}">Edit
+                                            Profile</a>
+                                        {% endif %}
+                                        <a class="dropdown-item" href="#">Settings</a>
+                                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                                    </div>
+                                </div>
                                 {% else %}
                                 <a href="{% url 'register' %}" class="btn head-btn1">Register</a>
                                 <a href="{% url 'login' %}" class="btn head-btn2">Login</a>
+
                                 {% endif %}
                             </div>
                         </div>
