@@ -29,7 +29,7 @@
     <link rel="stylesheet" href="{% static 'css/responsive.css'%}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-<style>
+    <style>
         #logout_id {
             width: 51%;
             border-radius: 50px;
@@ -46,18 +46,18 @@
             text-align: left;
             outline: none;
             font-size: 15px;
-            }
+        }
 
         .active, .collapsible:hover {
             background-color: #000080;
-            }
+        }
 
         .content {
             padding: 0 18px;
             display: none;
             overflow: hidden;
             background-color: #f1f1f1;
-            }
+        }
 
         table {
             font-family: arial, sans-serif;
@@ -68,7 +68,6 @@
             text-align: left;
             padding: 8px;
         }
-
 
 
     </style>
@@ -107,6 +106,7 @@
                                         {% endif %}
                                         {% endif %}
 
+
                                          {% if user.is_authenticated  %}
                                             {% if user_type == 'admin' %}
                                             <li><a href="/dashboardList">Listing</a></li>
@@ -124,6 +124,20 @@
 
                                  
 
+
+                                        {% if user.is_authenticated %}
+                                        {% if user_type == 'admin' %}
+                                        <li><a href="/dashboardList">Listing</a></li>
+                                        {% elif user_type == 'company' %}
+                                        <li><a href="{% url 'post_job' %}">Post Job </a></li>
+                                        {% else %}
+                                        <li><a href="{% url 'job-listing' %}">Find a Jobs </a></li>
+                                        {%endif%}
+                                        {% endif %}
+
+
+                                        <li><a href="{% url 'about' %}">About</a></li>
+
                                         <li><a href="#">Page</a>
                                             <ul class="submenu">
                                                 <li><a href="{% url 'blog' %}">Blog</a></li>
@@ -139,21 +153,15 @@
                                     </ul>
                                 </nav>
                             </div>
-                            <!-- Header-btn -->
+                           <!-- Header-btn -->
                             <div class="header-btn d-none f-right d-lg-block">
                                 {% if user.is_authenticated %}
 
                                 <div class="dropdown">
                                     <span>
-                                        Hello,
+                                        Hello, {{user.username}}
                                     </span>
-                                    {% if user_type == 'job_seeker' %}
-                                        <a href="{% url 'my_profile' %}" style="color: #007bff;">
-                                            <span>{{user.username}}</span>
-                                        </a>
-                                    {% else %}
-                                        <span>{{user.username}}</span>
-                                    {% endif %}
+
                                     <a class="genric-btn info circle dropdown-toggle" href="#" role="button"
                                        id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
                                        aria-expanded="false">
@@ -162,7 +170,9 @@
 
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                         {% if user_type == 'job_seeker' %}
-                                            <a class="dropdown-item" href="{% url 'edit_profile_job_seeker' %}">Edit Profile</a>
+                                        <a class="dropdown-item" href="{% url 'job_seeker_profile' %}">Profile</a>
+                                        <a class="dropdown-item" href="{% url 'my_profile' %}">CV</a>
+                                        <a class="dropdown-item" href="{% url 'my_profile' %}">My Applies</a>
                                         {% endif %}
                                         <a class="dropdown-item" href="#">Settings</a>
                                         <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
