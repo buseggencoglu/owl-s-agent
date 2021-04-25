@@ -10,6 +10,9 @@ from .models import Job_Seeker_Profile, Company_Profile, Job_Offer, CV
 from datetime import date
 from django.contrib import messages
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from .filters import Job_Offer_Filter
+
+
 
 from django.contrib.auth import (
     authenticate,
@@ -37,7 +40,9 @@ def company_required(function):
 # Create your views here.
 # @login_required(login_url='login')
 def home_view(request):
-    return render(request, 'website/index.html')
+    job_offer_list = Job_Offer.objects.all()
+    job_offer_filter = Job_Offer_Filter(request.GET, queryset=job_offer_list)
+    return render(request, 'website/index.html',{'filter': job_offer_filter})
 
 
 def about_view(request):
@@ -428,3 +433,4 @@ def create_paginator(request, list):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
     return posts
+
