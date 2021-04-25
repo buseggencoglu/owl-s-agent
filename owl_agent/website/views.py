@@ -331,6 +331,13 @@ def my_profile(request):
     return render(request, 'website/my_profile.html', context)
 
 
+def job_seeker_profile(request):
+    context = {}
+    data = Job_Seeker_Profile.objects.get(user=request.user)
+    context["data"] = data
+    return render(request, 'website/job_seeker_profile.html', context)
+
+
 def edit_profile_job_seeker(request):
     context = {}
     data = Job_Seeker_Profile.objects.get(user=request.user)
