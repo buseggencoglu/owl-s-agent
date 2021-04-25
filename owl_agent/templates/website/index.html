@@ -28,20 +28,22 @@ Owls Agent Home Page
                             <!-- form -->
                             <form method="get" class="search-box">
                                 <div class="input-form">
-                                    {% render_field filter.form.title class="form-control" %}
+
+                                    {% render_field filter.form.title class="input-form" %}
+                                </div><br><br><br><br><br>
+                                  <div class="select-form">
+                                    {% render_field filter.form.location class="select-form" %}
                                 </div>
 
-
+<br><br><br><br><br>
                                 <div class="select-form">
-                                    <div class="select-itms">
-                                        <select name="select" id="select1">
-                                            <option value="">Location BD</option>
-                                            <option value="">Location PK</option>
-                                            <option value="">Location US</option>
-                                            <option value="">Location UK</option>
-                                        </select>
-                                    </div>
+                                    {% render_field filter.form.company class="select-form" %}
                                 </div>
+<br><br><br><br><br>
+                                  <div class="select-form">
+                                    {% render_field filter.form.type class="select-form" %}
+                                </div>
+
                                 <div class="search-form">
                                     <button class="btn btn-primary" type="submit">Search</button>
                                 </div>
@@ -57,7 +59,10 @@ Owls Agent Home Page
                                 <tbody>
                                 {% for Job_Offer in filter.qs %}
                                 <tr>
-                                    <td>{{ Job_Offer.title }}</td>
+                                   <td>{{ Job_Offer.title }}</td>
+                                     <td>{{ Job_Offer.company }}</td>
+                                     <td>{{ Job_Offer.location }}</td>
+                                     <td>{{ Job_Offer.type }}</td>
                                 </tr>
                                 {% empty %}
                                 <tr>
