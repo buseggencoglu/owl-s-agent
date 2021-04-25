@@ -58,6 +58,19 @@ def job_details_view(request):
 
 
 def job_listing_view(request):
+    template = 'website/job_listing.html'
+
+    if request.method == "POST":
+        username = request.POST.get('username')
+        email = request.POST['email']
+        first_name = request.POST.get('first_name')
+        surname = request.POST.get('surname')
+        password1 = request.POST.get('password1')
+        password2 = request.POST.get('password2')
+        birthdate_text = request.POST.get('foundation_year')
+        birthdate = datetime.datetime.strptime(birthdate_text, '%Y-%m-%d')
+
+
     return render(request, 'website/job_listing.html')
 
 
@@ -216,20 +229,24 @@ def post_job(request):
     template = 'website/post_job.html'
 
     if request.method == "POST":
+        categories = request.POST.get('categories')
         title = request.POST.get('title')
         description = request.POST['description']
         required_skills = request.POST['required_skills']
         education = request.POST['education']
         location = request.POST['location']
         type = request.POST['type']
-        is_experience = True if request.POST.get('is_experience', "true") == "true" else False
+        experience = request.POST.get('experience')
         salary = request.POST['salary']
         start_date = request.POST['start_date']
         company = Company_Profile.objects.get(user=request.user)
 
-        job_offer = Job_Offer.objects.create(title=title, description=description, required_skills=required_skills,
-                                             education=education, location=location, type=type, salary=salary,
-                                             is_experience=is_experience, start_date=start_date, company=company)
+        job_offer = Job_Offer.objects.create(categories=categories, title=title, description=description,
+                                             required_skills=required_skills,
+                                             education=education, location=location,
+                                             type=type, salary=salary,
+                                             experience=experience, start_date=start_date,
+                                             company=company)
         job_offer.save()
 
         return redirect('job_sent')
@@ -239,6 +256,7 @@ def post_job(request):
 
 def activation_sent_view(request):
     return render(request, 'website/activation_sent.html')
+
 
 def job_sent_view(request):
     return render(request, 'website/job_sent.html')
@@ -329,6 +347,7 @@ def edit_profile_job_seeker(request):
         messages.success(request, "Profile updated successfully.")
     return render(request, 'website/edit_profile_job_seeker.html', context)
 
+
 def company_profile(request, pk):
     profile = Company_Profile.objects.get(user_id=pk)
     return render(request, 'website/company_profile.html', {'profile': profile})
@@ -382,22 +401,22 @@ def edit_profile_company(request, pk):
 
 
 def admin_dashboard_list(request):
-   querySet = Company_Profile.objects.all().order_by()
-   querySet = create_paginator(request, querySet)
-   listing_jobseeker = Job_Seeker_Profile.objects.all().order_by()
-   listing_jobseeker = create_paginator(request, listing_jobseeker)
+    querySet = Company_Profile.objects.all().order_by()
+    querySet = create_paginator(request, querySet)
+    listing_jobseeker = Job_Seeker_Profile.objects.all().order_by()
+    listing_jobseeker = create_paginator(request, listing_jobseeker)
 
-   return render(request, 'website/listing.html', {'querySet': querySet, 'listing_jobseeker': listing_jobseeker})
+    return render(request, 'website/listing.html', {'querySet': querySet, 'listing_jobseeker': listing_jobseeker})
 
 
-def admin_delete_companies(request,pk):
+def admin_delete_companies(request, pk):
     company = Company_Profile.objects.get(id=pk)
     company.user.delete()
 
     return HttpResponseRedirect('/dashboardList')
 
 
-def admin_delete_jobseeker(request,pk):
+def admin_delete_jobseeker(request, pk):
     company = Job_Seeker_Profile.objects.get(id=pk)
     company.user.delete()
 
@@ -415,7 +434,3 @@ def create_paginator(request, list):
         posts = paginator.page(paginator.num_pages)
     return posts
 
-# def search(request):
-#     job_offer_list = Job_Offer.objects.all()
-#     job_offer_filter = Job_Offer_Filter(request.GET, queryset=job_offer_list)
-#     return render(request, 'website/index.html', {'filter': job_offer_filter})

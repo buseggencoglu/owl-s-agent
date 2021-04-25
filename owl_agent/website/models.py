@@ -52,18 +52,53 @@ class CV(models.Model):
 
 
 class Job_Offer(models.Model):
+    CATEGORIES = (
+        ('design', 'Design & Creative'),
+        ('design_development', 'Design & Development'),
+        ('sales_marketing', "Sales & Marketing"),
+        ('mobile_app', "Mobile Application"),
+        ('construction', "Construction"),
+        ("it", "Information Technology"),
+        ("real_estate", "Real Estate"),
+        ("content_writer", "Content Writer")
+    )
+
+    TYPE = (
+        ("full_time", "Full Time"),
+        ("part_time", "Part Time"),
+        ("intern", "Internship"),
+        ("remote", "Remote")
+    )
+
+    EXPERIENCE = (
+        ("0_years", "No experience"),
+        ("1_2_years", "1-2 years"),
+        ("2_3_years", "2-3 years"),
+        ("3_6_years", "3-6 years"),
+        ("6_more_years", "6-more years")
+    )
+
+    LOCATION = (
+        ("istanbul", "Istanbul"),
+        ("ankara", "Ankara"),
+        ("izmir", "Izmir"),
+        ("bursa", "Bursa")
+    )
+
+    categories = models.CharField(max_length=25, choices=CATEGORIES)
     title = models.CharField(max_length=100)
     description = models.CharField(max_length=10000)
     required_skills = models.CharField(max_length=10000, blank=True)
     education = models.CharField(max_length=10000, blank=True)
     start_date = models.DateField(blank=True)
     post_date = models.DateField(auto_now_add=True, blank=True)
-    type = models.CharField(max_length=50, blank=True)
-    location = models.CharField(max_length=500)
-    work_level = models.CharField(max_length=100,blank=True)
-    is_experience = models.BooleanField(blank=True)
+    type = models.CharField(max_length=25, blank=True, choices=TYPE)
+    location = models.CharField(max_length=500, choices=LOCATION)
+    work_level = models.CharField(max_length=100, blank=True)
+    experience = models.CharField(max_length=100, blank=True, choices=EXPERIENCE)
     salary = models.CharField(max_length=100, blank=True)
     company = models.ForeignKey(Company_Profile, on_delete=models.CASCADE, related_name='%(class)s_company')
+
 
 class Application(models.Model):
     applicant = models.ForeignKey(Job_Seeker_Profile, on_delete=models.CASCADE, related_name='%(class)s_applicant')
