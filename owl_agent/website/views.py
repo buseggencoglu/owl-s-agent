@@ -299,6 +299,10 @@ def add_cv(request, pk=None):
         if form.is_valid():
             cv = form.save(commit=False)
             cv.owner = owner
+
+            if "cv_img" in request.FILES:
+                cv.cv_img = request.FILES["cv_img"]
+
             cv.save()
             return redirect('my_profile')
     context = {
