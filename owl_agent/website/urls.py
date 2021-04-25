@@ -31,7 +31,6 @@ urlpatterns = [
     path('dashboardList/', views.admin_dashboard_list, name='admin_dashboard_list'),
     path('dashboardList/deleteCompany/<int:pk>', views.admin_delete_companies, name='admin_delete_companies'),
     path('dashboardList/deleteJobSeeker/<int:pk>', views.admin_delete_jobseeker, name='admin_delete_jobseeker'),
-
     path('job_seeker_profile/', views.job_seeker_profile, name='job_seeker_profile'),
 
 ]
