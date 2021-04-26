@@ -2,6 +2,7 @@ import datetime
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth.decorators import login_required
+from django.core.mail.backends import console
 from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.models import User
@@ -59,19 +60,17 @@ def job_details_view(request):
 
 def job_listing_view(request):
     template = 'website/job_listing.html'
+    context = {}
 
     if request.method == "POST":
-        username = request.POST.get('username')
-        email = request.POST['email']
-        first_name = request.POST.get('first_name')
-        surname = request.POST.get('surname')
-        password1 = request.POST.get('password1')
-        password2 = request.POST.get('password2')
-        birthdate_text = request.POST.get('foundation_year')
-        birthdate = datetime.datetime.strptime(birthdate_text, '%Y-%m-%d')
+        title = request.POST.get('title')
+        location = request.POST['location']
 
+        context['job_offer'] = Job_Offer.objects.all().get(title=title, location=location)
 
-    return render(request, 'website/job_listing.html')
+        # console.log(title)
+        # print(location)
+    return render(request, 'website/job_listing.html0', context)
 
 
 def blog_view(request):
