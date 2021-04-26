@@ -66,11 +66,14 @@ def job_listing_view(request):
         title = request.POST.get('title')
         location = request.POST['location']
 
-        context['job_offer'] = Job_Offer.objects.all().get(title=title, location=location)
+        job_offers = Job_Offer.objects.all().filter(title__contains=title,location=location)
+        print(job_offers.count())
+        job_offers = create_paginator(request, job_offers)
+        context = {'job_offer': job_offers}
 
         # console.log(title)
         # print(location)
-    return render(request, 'website/job_listing.html0', context)
+    return render(request, template, context)
 
 
 def blog_view(request):

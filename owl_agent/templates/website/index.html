@@ -20,24 +20,30 @@ Owls Agent Home Page
                                 <h1>Find the most exciting startup jobs</h1>
                             </div>
                         </div>
-
-                    </div>
-                    <!-- Search Box -->
-                    <div class="row">
-                        <div class="col-xl-8">
-                            <!-- form -->
-                            <form method="get" class="search-box">
-                                <div class="input-form">
-                                    {% render_field filter.form.title class="input-form" %}
-                                </div>
-                                  <div class="select-form">
-                                    {% render_field filter.form.location class="select-form" %}
-                                </div>
-                                <div class="search-form">
-                                    <button class="btn btn-primary" type="submit">Search...</button>
-                                </div>
-                            </form>
-
+                        <!-- Search Box -->
+                        <div class="row">
+                            <div class="col-xl-8">
+                                <!-- form -->
+                                <form action="{% url 'job-listing' %}" class="search-box" id="title_search" method="POST">
+                                    {% csrf_token %}
+                                    <div class="input-form">
+                                        <input type="text" placeholder="Job Tittle or keyword" name="title">
+                                    </div>
+                                    <div class="select-form">
+                                        <div class="select-itms">
+                                            <select name="location" id="select1">
+                                                <option value="istanbul">İstanbul</option>
+                                                <option value="ankara">Ankara</option>
+                                                <option value="izmir">İzmir</option>
+                                                <option value="bursa">Bursa</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="search-form">
+                                         <a href="javascript:{}" onclick="document.getElementById('title_search').submit();">Find job</a>
+                                    </div>	
+                                </form>	
+                            </div>
                         </div>
                     </div>
                 </div>
