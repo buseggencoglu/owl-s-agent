@@ -28,7 +28,7 @@
     <link rel="stylesheet" href="{% static 'css/responsive.css'%}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
-    <style>
+<style>
         #logout_id {
             width: 51%;
             border-radius: 50px;
@@ -211,9 +211,14 @@
                                         {% if user_type == 'job_seeker' %}
                                         <a class="dropdown-item" href="{% url 'edit_profile_job_seeker' %}">Edit
                                             Profile</a>
+
+                                        <a class="dropdown-item" href="{% url 'job_seeker_profile' %}">Profile</a>
+                                        <a class="dropdown-item" href="{% url 'my_profile' %}">CV</a>
+                                        <a class="dropdown-item" href="{% url 'my_profile' %}">My Applies</a>
                                         {% endif %}
                                         <a class="dropdown-item" href="#">Settings</a>
                                         <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+
                                     </div>
                                 </div>
                                 {% else %}
