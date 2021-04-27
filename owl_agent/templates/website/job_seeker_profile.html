@@ -65,7 +65,7 @@ Owls Agent Login Page
                         </div>
                     </div>
 
-                    <a href="{% url 'edit_profile_job_seeker' %}">
+                    <a href="{% url 'edit_profile_job_seeker' pk=user.id  %}">
                         <button type="submit" id="login-page-button" class="genric-btn danger circle">EDIT</button>
                     </a>
                 </div>

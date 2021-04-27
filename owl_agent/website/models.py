@@ -36,7 +36,7 @@ class Job_Seeker_Profile(User_Profile):
     birth_date = models.DateField()
     carrier_list = models.CharField(max_length=2000)
     portfolio_link = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='job_seeker_image', null=True, blank=True, default='job_seeker_image/default')
+    image = models.ImageField(upload_to='job_seeker_image', null=True, blank=True, default='job_seeker_image/default.png')
 
 
 class CV(models.Model):
