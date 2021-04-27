@@ -361,12 +361,16 @@ def edit_profile_job_seeker(request):
 
 def company_profile(request, pk):
     profile = Company_Profile.objects.get(user_id=pk)
-    return render(request, 'website/company_profile.html', {'profile': profile})
+    job_posts = Job_Offer.objects.filter(company=profile)
+    print("****", job_posts)
+    args = {'profile': profile, 'job_posts':job_posts}
+    return render(request, 'website/company_profile.html', args)
 
 
 def edit_profile_company(request, pk):
     template = 'website/edit_profile_company.html'
     company = Company_Profile.objects.filter(user=request.user)[0]
+
 
     if request.method == 'POST':
         image = request.FILES.get('image')

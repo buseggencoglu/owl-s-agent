@@ -22,15 +22,19 @@ Profile
                 <div class="card">
                     <div class="card-body">
                         <div class="d-flex flex-column align-items-center text-center">
-                            {% if profile.image %}
+
+                            {% if profile.image.url %}
                             <img src="{{profile.image.url}}" height="150" width="150"
                                  class="rounded-circle">
                             {% endif %}
+
                             <div class="mt-3">
                                 <h4><b>{{profile.user.username}}</b></h4>
+                                {% if profile.user == user %}
                                 <a href="{% url 'edit_profile_company' pk=user.id %}">
                                     <button type="submit" class="btn btn-info">Edit</button>
                                 </a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -99,7 +103,64 @@ Profile
                     </div>
                 </div>
             </div>
+
         </div>
+
+
+        <div class="col-sm-3" style="padding-top:70">
+            <h6 class="mb-0"><b>{{profile.user.username}}'s Job Posts</b></h6>
+        </div>
+        <table class="table card mb-3 table-hover table-striped table">
+
+            <thead>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Required Skill</th>
+            <th>Education</th>
+            <th>Start Date</th>
+            <th>Post Date</th>
+            <th>Type</th>
+            <th>Location</th>
+            <th>Work Level</th>
+            <th>Experience</th>
+            <th>Salary</th>
+            {% if profile.user == user %}
+            <th class="text-center" colspan="2">
+                <div style="width: 143px;">
+                </div>
+            </th>
+            {% endif %}
+
+            </thead>
+            {% for job_post in job_posts%}
+
+            <tr>
+                <td>{{job_post.title}}</td>
+                <td>{{job_post.description}}</td>
+                <td>{{job_post.required_skill}}</td>
+                <td>{{job_post.education}}</td>
+                <td>{{job_post.start_date}}</td>
+                <td>{{job_post.post_date}}</td>
+                <td>{{job_post.type}}</td>
+                <td>{{job_post.location}}</td>
+                <td>{{job_post.work_level}}</td>
+                <td>{{job_post.is_experience}}</td>
+                <td>{{job_post.salary}}</td>
+                {% if profile.user == user %}
+                <td>
+                    <a href="">
+                        <button type="submit" class="btn btn-info">Update</button>
+                    </a>
+                </td>
+                <td>
+                    <a href="">
+                        <button type="button" class="btn btn-danger">Delete</button>
+                    </a>
+                </td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </table>
     </div>
 </div>
 </body>
