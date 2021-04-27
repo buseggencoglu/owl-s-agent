@@ -26,6 +26,7 @@
     <link rel="stylesheet" href="{% static 'css/nice-select.css'%}">
     <link rel="stylesheet" href="{% static 'css/style.css'%}">
     <link rel="stylesheet" href="{% static 'css/responsive.css'%}">
+    <link rel="stylesheet" href="{% static 'css/main-css.css'%}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
 
     <style>
@@ -144,7 +145,7 @@
                                         Hello,
                                     </span>
                                     {% if user_type == 'job_seeker' %}
-                                    <a href="{% url 'my_profile' %}" style="color: #007bff;">
+                                    <a href="{% url 'job_seeker_profile' pk=user.id %}" style="color: #007bff;">
                                         <span>{{user.username}}</span>
                                     </a>
                                     {% elif user_type == 'company' %}
@@ -163,7 +164,6 @@
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                         {% if user_type == 'job_seeker' %}
                                         <a class="dropdown-item" href="{% url 'job_seeker_profile' pk=user.id %}">Profile</a>
-                                        <a class="dropdown-item" href="{% url 'my_profile' %}">CV</a>
                                         <a class="dropdown-item" href="#">My Applies</a>
                                         {% endif %}
                                         <a class="dropdown-item" href="#">Settings</a>

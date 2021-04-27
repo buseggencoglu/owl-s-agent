@@ -23,7 +23,6 @@ urlpatterns = [
     path('dashboard/approve/<int:pk>', views.approve_companies, name='company_approve'),
     path('dashboard/reject/<int:pk>', views.reject_companies, name='company_reject'),
 
-    path('my_profile/', views.my_profile, name='my_profile'),
     path('add_cv/<int:pk>', views.add_cv, name='add_cv'),
     path('delete/<int:pk>', views.delete_cv, name='delete_cv'),
     path('add_cv', views.add_cv, name='add_cv'),
