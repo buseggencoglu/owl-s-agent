@@ -1,0 +1,136 @@
+{% extends 'website/base.html' %}
+{% block title %}
+    Owls Agent Admin Dashboard
+{% endblock %}
+
+{% load static %}
+{% block content %}
+    <center>
+        <br><br>
+        <button type="button" class="collapsible">List Of Companies</button>
+
+        <div class="content">
+            <table>
+                <tr>
+                    <th>Company Name</th>
+                    <th>Tax Id</th>
+                    <th>Website</th>
+                    <th>Foundation Year</th>
+
+                </tr>
+                {% for x in querySet %}
+
+                    <tr>
+                        <td>{{ x.company_name }}</td>
+                        <td>{{ x.tax_id }}</td>
+                        <td>{{ x.website }}</td>
+                        <td>{{ x.foundation_year }}</td>
+
+
+                        <td class="text-center">
+                            <a href="/dashboardList/deleteCompany/{{ x.id }}">
+                                <button type="button" class="btn btn-success">Delete</button>
+                            </a>
+                    </tr>
+                {% endfor %}
+            </table>
+            <br><br>
+             <div>
+             <table>
+            <div id="more-div-1">
+                {% if querySet.has_previous %}
+                    <button id="more-button-1" class="btn btn-warning"><a class="infinite-more-link"
+                                                                          href="?page={{ querySet.previous_page_number }}"
+                                                                          style="color: white">Previous</a>
+                    </button>
+                {% endif %}
+
+                {% if querySet.has_next %}
+                    <button id="more-button" class="btn btn-warning "><a class="infinite-more-link "
+                                                                        href="?page={{ querySet.next_page_number }}"
+                                                                        style="color: white">Next</a>
+                    </button>
+                {% endif %}
+            </div>
+
+
+
+            </table>
+        </div>
+
+    </center>
+    <br>
+    <br>
+    <center>
+        <br><br>
+
+
+        <button type="button" class="collapsible">List Of Job Seekers</button>
+        <div class="content">
+            <table>
+                <tr>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Birth_Date</th>
+                    <th>Carrier List</th>
+                    <th>Portfolio Link</th>
+                </tr>
+                {% for y in listing_jobseeker %}
+
+                    <tr>
+                        <td>{{ y.name }}</td>
+                        <td>{{ y.surname }}</td>
+                        <td>{{ y.birth_date }}</td>
+                        <td>{{ y.carrier_list }}</td>
+                        <td>{{ y.portfolio_link }}</td>
+
+
+                        <td class="text-center">
+                            <a href="/dashboardList/deleteJobSeeker/{{ y.id }}">
+                                <button type="button" class="btn btn-success">Delete</button>
+                            </a>
+                    </tr>
+                {% endfor %}
+            </table>
+            <div>
+            <table>
+            <div id="more-div-1">
+                {% if querySet.has_previous %}
+                    <button id="more-button-1" class="btn btn-warning"><a class="infinite-more-link"
+                                                                          href="?page={{ listing_jobseeker.previous_page_number }}"
+                                                                          style="color: white">Previous</a>
+                    </button>
+                {% endif %}
+
+                {% if listing_jobseeker.has_next %}
+                    <button id="more-button" class="btn btn-warning"><a class="infinite-more-link "
+                                                                        href="?page={{ listing_jobseeker.next_page_number }}"
+                                                                        style="color: white">Next</a>
+                    </button>
+                {% endif %}
+            </div>
+            </table>
+
+        </div>
+
+    </center>
+
+    <br><br>
+
+    <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
+
+        for (i = 0; i < coll.length; i++) {
+            coll[i].addEventListener("click", function () {
+                this.classList.toggle("active");
+                var content = this.nextElementSibling;
+                if (content.style.display === "block") {
+                    content.style.display = "none";
+                } else {
+                    content.style.display = "block";
+                }
+            });
+        }
+    </script>
+{% endblock %}

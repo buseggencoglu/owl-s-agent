@@ -71,6 +71,41 @@
 
 
 
+        .collapsible {
+            background-color: #ff0066;
+            color: white;
+            cursor: pointer;
+            padding: 18px;
+            width: 50%;
+            border: none;
+            text-align: left;
+            outline: none;
+            font-size: 15px;
+            }
+
+        .active, .collapsible:hover {
+            background-color: #000080;
+            }
+
+        .content {
+            padding: 0 18px;
+            display: none;
+            overflow: hidden;
+            background-color: #f1f1f1;
+            }
+
+        table {
+            font-family: arial, sans-serif;
+            width: 50%;
+        }
+
+        td, th {
+            text-align: left;
+            padding: 8px;
+        }
+
+
+
     </style>
 
 </head>
@@ -98,14 +133,27 @@
                                     <ul id="navigation">
                                         <li><a href="{% url 'home' %}">Home</a></li>
 
-                                        {% if user.is_authenticated %}
-                                        {% if user_type == 'admin' %}
+                                        {% if user.is_authenticated  %}
+                                            {% if user_type == 'admin' %}
 
 
-                                        <li><a href="/dashboard">Dashboard</a></li>
+                                            <li><a href="/dashboard">Dashboard</a></li>
 
+                                             {% endif %}
                                         {% endif %}
+
+                                         {% if user.is_authenticated  %}
+                                            {% if user_type == 'admin' %}
+                                            <li><a href="/dashboardList">Listing</a></li>
+                                                {% elif user_type == 'company' %}
+                                                <li><a href="{% url 'post_job' %}">Post Job </a></li>
+                                             {% else %}
+                                            <li><a href="{% url 'job-listing' %}">Find a Jobs </a></li>
+                                             {%endif%}
                                         {% endif %}
+
+
+
 
                                         {% if user.is_authenticated %}
                                         {% if user_type == 'admin' %}
@@ -171,7 +219,6 @@
                                 {% else %}
                                 <a href="{% url 'register' %}" class="btn head-btn1">Register</a>
                                 <a href="{% url 'login' %}" class="btn head-btn2">Login</a>
-
                                 {% endif %}
                             </div>
                         </div>
