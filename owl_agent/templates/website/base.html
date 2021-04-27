@@ -164,7 +164,7 @@
                                         {% if user_type == 'job_seeker' %}
                                         <a class="dropdown-item" href="{% url 'job_seeker_profile' pk=user.id %}">Profile</a>
                                         <a class="dropdown-item" href="{% url 'my_profile' %}">CV</a>
-                                        <a class="dropdown-item" href="{% url 'my_profile' %}">My Applies</a>
+                                        <a class="dropdown-item" href="#">My Applies</a>
                                         {% endif %}
                                         <a class="dropdown-item" href="#">Settings</a>
                                         <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
