@@ -9,7 +9,7 @@
         <br><br>
         <button type="button" class="collapsible">List Of Companies</button>
 
-        <div class="content">
+
             <table>
                 <tr>
                     <th>Company Name</th>
@@ -36,8 +36,8 @@
             </table>
             <br><br>
              <div>
-             <table>
-            <div id="more-div-1">
+             <div>
+            <div id="more-div-2">
                 {% if querySet.has_previous %}
                     <button id="more-button-1" class="btn btn-warning"><a class="infinite-more-link"
                                                                           href="?page={{ querySet.previous_page_number }}"
@@ -52,11 +52,12 @@
                     </button>
                 {% endif %}
             </div>
+             </div>
 
 
 
             </table>
-        </div>
+
 
     </center>
     <br>
@@ -66,7 +67,7 @@
 
 
         <button type="button" class="collapsible">List Of Job Seekers</button>
-        <div class="content">
+
             <table>
                 <tr>
                     <th>Name</th>
@@ -95,15 +96,15 @@
             <div>
             <table>
             <div id="more-div-1">
-                {% if querySet.has_previous %}
-                    <button id="more-button-1" class="btn btn-warning"><a class="infinite-more-link"
+                {% if listing_jobseeker.has_previous %}
+                    <button id="more-button-2" class="btn btn-warning"><a class="infinite-more-link"
                                                                           href="?page={{ listing_jobseeker.previous_page_number }}"
                                                                           style="color: white">Previous</a>
                     </button>
                 {% endif %}
 
                 {% if listing_jobseeker.has_next %}
-                    <button id="more-button" class="btn btn-warning"><a class="infinite-more-link "
+                    <button id="more-button-3" class="btn btn-warning"><a class="infinite-more-link "
                                                                         href="?page={{ listing_jobseeker.next_page_number }}"
                                                                         style="color: white">Next</a>
                     </button>
@@ -111,26 +112,9 @@
             </div>
             </table>
 
-        </div>
+
 
     </center>
 
     <br><br>
-
-    <script>
-        var coll = document.getElementsByClassName("collapsible");
-        var i;
-
-        for (i = 0; i < coll.length; i++) {
-            coll[i].addEventListener("click", function () {
-                this.classList.toggle("active");
-                var content = this.nextElementSibling;
-                if (content.style.display === "block") {
-                    content.style.display = "none";
-                } else {
-                    content.style.display = "block";
-                }
-            });
-        }
-    </script>
 {% endblock %}

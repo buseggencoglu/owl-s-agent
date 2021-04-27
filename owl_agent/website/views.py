@@ -419,6 +419,12 @@ def admin_dashboard_list(request):
 
     return render(request, 'website/listing.html', {'querySet': querySet, 'listing_jobseeker': listing_jobseeker})
 
+def admin_dashboard_job_list(request):
+    querySet = Job_Offer.objects.all().order_by()
+    querySet = create_paginator(request, querySet)
+
+    return render(request, 'website/admin_job_listing.html', {'querySet': querySet, 'listing_job_offer': querySet})
+
 
 def admin_delete_companies(request, pk):
     company = Company_Profile.objects.get(id=pk)
