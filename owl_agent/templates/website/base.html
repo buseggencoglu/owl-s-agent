@@ -162,6 +162,8 @@
 
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                         {% if user_type == 'job_seeker' %}
+                                        <a class="dropdown-item" href="{% url 'job_seeker_profile' pk=user.id %}">Profile</a>
+
                                         <a class="dropdown-item" href="{% url 'edit_profile_job_seeker' %}">Edit
                                             Profile</a>
 

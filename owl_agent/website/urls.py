@@ -22,7 +22,7 @@ urlpatterns = [
     path('dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('dashboard/approve/<int:pk>', views.approve_companies, name='company_approve'),
     path('dashboard/reject/<int:pk>', views.reject_companies, name='company_reject'),
-    path('edit_profile_job_seeker/', views.edit_profile_job_seeker, name='edit_profile_job_seeker'),
+
     path('my_profile/', views.my_profile, name='my_profile'),
     path('add_cv/<int:pk>', views.add_cv, name='add_cv'),
     path('delete/<int:pk>', views.delete_cv, name='delete_cv'),
@@ -35,9 +35,6 @@ urlpatterns = [
     path('dashboardJobList/', views.admin_dashboard_job_list, name='admin_dashboard_job_list'),
     path('dashboardList/deleteCompany/<int:pk>', views.admin_delete_companies, name='admin_delete_companies'),
     path('dashboardList/deleteJobSeeker/<int:pk>', views.admin_delete_jobseeker, name='admin_delete_jobseeker'),
-    path('job_seeker_profile/', views.job_seeker_profile, name='job_seeker_profile'),
-
-
-
-
+    path('job_seeker_profile/<int:pk>', views.job_seeker_profile, name='job_seeker_profile'),
+    path('edit_profile_job_seeker/<int:pk>', views.edit_profile_job_seeker, name='edit_profile_job_seeker'),
 ]
