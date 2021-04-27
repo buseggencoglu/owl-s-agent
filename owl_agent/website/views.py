@@ -10,6 +10,9 @@ from .models import Job_Seeker_Profile, Company_Profile, Job_Offer, CV
 from datetime import date
 from django.contrib import messages
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from .filters import Job_Offer_Filter
+
+
 
 from django.contrib.auth import (
     authenticate,
@@ -37,7 +40,9 @@ def company_required(function):
 # Create your views here.
 # @login_required(login_url='login')
 def home_view(request):
-    return render(request, 'website/index.html')
+    job_offer_list = Job_Offer.objects.all()
+    job_offer_filter = Job_Offer_Filter(request.GET, queryset=job_offer_list)
+    return render(request, 'website/index.html',{'filter': job_offer_filter})
 
 
 def about_view(request):
@@ -294,6 +299,10 @@ def add_cv(request, pk=None):
         if form.is_valid():
             cv = form.save(commit=False)
             cv.owner = owner
+
+            if "cv_img" in request.FILES:
+                cv.cv_img = request.FILES["cv_img"]
+
             cv.save()
             return redirect('my_profile')
     context = {
@@ -354,12 +363,16 @@ def edit_profile_job_seeker(request,pk):
 
 def company_profile(request, pk):
     profile = Company_Profile.objects.get(user_id=pk)
-    return render(request, 'website/company_profile.html', {'profile': profile})
+    job_posts = Job_Offer.objects.filter(company=profile)
+    print("****", job_posts)
+    args = {'profile': profile, 'job_posts':job_posts}
+    return render(request, 'website/company_profile.html', args)
 
 
 def edit_profile_company(request, pk):
     template = 'website/edit_profile_company.html'
     company = Company_Profile.objects.filter(user=request.user)[0]
+
 
     if request.method == 'POST':
         image = request.FILES.get('image')
@@ -412,6 +425,12 @@ def admin_dashboard_list(request):
 
     return render(request, 'website/listing.html', {'querySet': querySet, 'listing_jobseeker': listing_jobseeker})
 
+def admin_dashboard_job_list(request):
+    querySet = Job_Offer.objects.all().order_by()
+    querySet = create_paginator(request, querySet)
+
+    return render(request, 'website/admin_job_listing.html', {'querySet': querySet, 'listing_job_offer': querySet})
+
 
 def admin_delete_companies(request, pk):
     company = Company_Profile.objects.get(id=pk)
@@ -437,3 +456,4 @@ def create_paginator(request, list):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
     return posts
+

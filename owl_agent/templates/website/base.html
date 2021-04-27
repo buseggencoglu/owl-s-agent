@@ -102,21 +102,24 @@
 
                                         <li><a href="/dashboard">Dashboard</a></li>
 
-                                        {% endif %}
-                                        {% endif %}
-
-                                        {% if user.is_authenticated %}
-                                        {% if user_type == 'admin' %}
-                                        <li><a href="/dashboardList">Listing</a></li>
-                                        {% elif user_type == 'company' %}
-                                        <li><a href="{% url 'post_job' %}">Post Job </a></li>
-                                        {% else %}
-                                        <li><a href="{% url 'job-listing' %}">Find a Jobs </a></li>
-                                        {%endif%}
+                                             {% endif %}
                                         {% endif %}
 
 
-                                        <li><a href="{% url 'about' %}">About</a></li>
+
+                                         {% if user.is_authenticated  %}
+                                            {% if user_type == 'admin' %}
+                                            <li><a href="/dashboardList">Listing</a></li>
+                                                <li><a href="/dashboardJobList">Job Listing</a></li>
+                                                {% elif user_type == 'company' %}
+                                                <li><a href="{% url 'post_job' %}">Post Job </a></li>
+                                                 <li><a href="{% url 'about' %}">About</a></li>
+                                             {% else %}
+                                            <li><a href="{% url 'job-listing' %}">Find a Jobs </a></li>
+                                                 <li><a href="{% url 'about' %}">About</a></li>
+                                             {%endif%}
+                                        {% endif %}
+
                                         <li><a href="#">Page</a>
                                             <ul class="submenu">
                                                 <li><a href="{% url 'blog' %}">Blog</a></li>
@@ -138,9 +141,19 @@
 
                                 <div class="dropdown">
                                     <span>
-                                        Hello, {{user.username}}
+                                        Hello,
                                     </span>
-
+                                    {% if user_type == 'job_seeker' %}
+                                    <a href="{% url 'my_profile' %}" style="color: #007bff;">
+                                        <span>{{user.username}}</span>
+                                    </a>
+                                    {% elif user_type == 'company' %}
+                                    <a href="{% url 'company_profile'  pk=user.id %}" style="color: #007bff;">
+                                        <span>{{user.username}}</span>
+                                    </a>
+                                    {% else %}
+                                    <span>{{user.username}}</span>
+                                    {% endif %}
                                     <a class="genric-btn info circle dropdown-toggle" href="#" role="button"
                                        id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true"
                                        aria-expanded="false">
@@ -150,17 +163,22 @@
                                     <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
                                         {% if user_type == 'job_seeker' %}
                                         <a class="dropdown-item" href="{% url 'job_seeker_profile' pk=user.id %}">Profile</a>
+
+                                        <a class="dropdown-item" href="{% url 'edit_profile_job_seeker' %}">Edit
+                                            Profile</a>
+
+                                        <a class="dropdown-item" href="{% url 'job_seeker_profile' %}">Profile</a>
                                         <a class="dropdown-item" href="{% url 'my_profile' %}">CV</a>
                                         <a class="dropdown-item" href="{% url 'my_profile' %}">My Applies</a>
                                         {% endif %}
                                         <a class="dropdown-item" href="#">Settings</a>
                                         <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+
                                     </div>
                                 </div>
                                 {% else %}
                                 <a href="{% url 'register' %}" class="btn head-btn1">Register</a>
                                 <a href="{% url 'login' %}" class="btn head-btn2">Login</a>
-
                                 {% endif %}
                             </div>
                         </div>

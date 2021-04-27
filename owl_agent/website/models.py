@@ -17,7 +17,7 @@ class User_Profile(models.Model):
 
 
 class Company_Profile(User_Profile):
-    image = models.ImageField(upload_to='company_image', null=True, blank=True, default='company_image/default')
+    image = models.ImageField(upload_to='company_image', null=True, blank=True, default='company_image/default.png')
     company_name = models.CharField(max_length=100)
     tax_id = models.IntegerField()
     website = models.CharField(max_length=100)
@@ -41,7 +41,9 @@ class Job_Seeker_Profile(User_Profile):
 
 class CV(models.Model):
     name = models.CharField(max_length=20)
+    cv_img = models.ImageField(upload_to='cv_image', null=True, blank=True, default='cv_img/default')
     almater = models.CharField(max_length=100)
+    address = models.TextField(max_length=500)
     graduation_date = models.DateField()
     internships = models.TextField(max_length=2000)
     gpa = models.DecimalField(max_digits=20, decimal_places=2)
@@ -50,6 +52,23 @@ class CV(models.Model):
     interests = models.TextField(max_length=1000)
     owner = models.ForeignKey(Job_Seeker_Profile, on_delete=models.CASCADE, related_name='%(class)s_owner')
 
+    MILITARY_STATUS_CHOICES = [
+        (1, 'Done'),
+        (0, 'Not Done'),
+    ]
+    military_status = models.IntegerField(
+        choices=MILITARY_STATUS_CHOICES,
+        default=1,
+    )
+
+    LICENCES_STATUS_CHOICES = [
+        (1, 'Have'),
+        (0, 'Have Not'),
+    ]
+    licences_status = models.IntegerField(
+        choices=LICENCES_STATUS_CHOICES,
+        default=1,
+    )
 
 class Job_Offer(models.Model):
     CATEGORIES = (

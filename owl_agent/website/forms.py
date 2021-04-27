@@ -61,6 +61,10 @@ class CVForm(forms.ModelForm):
         model = CV
         fields = [
             'name',
+            'cv_img',
+            'address',
+            'military_status',
+            'licences_status',
             'almater',
             'graduation_date',
             'internships',
