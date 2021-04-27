@@ -1,0 +1,80 @@
+{% extends 'website/base.html' %}
+{% block title %}
+Owls Agent Login Page
+{% endblock %}
+
+{% load static %}
+{% block content %}
+
+<div class="container h-80">
+    <div class="d-flex justify-content-center h-80">
+        <div class="col-md-6">
+            {% for message in messages %}
+            <div class="alert alert-info" id="messages">{{message}}</div>
+            {% endfor %}
+            <div class="card mb-4">
+                <div class="card-header">
+                    Job Seeker Profile
+                </div>
+                <div class="card-body">
+                    <div class="col-md-12 mb-3 mb-md-0 text-center">
+                        {% if data.image %}
+                        <img class="rounded-circle" src="{{data.image.url}}" width="100px" height="100px"/>
+                        {% endif %}
+                    </div>
+
+                    <div class="row form-group">
+                        <div class="col-md-12 mb-3 mb-md-0">
+                            <label class="text-black" for="">Name</label>
+                            <input type="text" class="form-control" name="name" id="" value="{{data.name}}"
+                                   placeholder="{{data.name}}" disabled>
+                        </div>
+                        <div class="col-md-12 mb-3 mb-md-0">
+                            <label class="text-black" for="">Surname</label>
+                            <input type="text" class="form-control" name="surname" value="{{data.surname}}"
+                                   disabled>
+                        </div>
+                        <div class="col-md-12 mb-3 mb-md-0">
+                            <label class="text-black" for="">Birth date</label>
+                            <input type="text" class="form-control" name="birth_date" value="{{data.birth_date}}"
+                                   disabled>
+                        </div>
+                        <div class="col-md-12 mb-3 mb-md-0">
+                            <label class="text-black" for="">Carrier List</label>
+                            <input type="text" class="form-control" name="carrier_list"
+                                   value="{{data.carrier_list}}" disabled>
+                        </div>
+                        <div class="col-md-12 mb-3 mb-md-0">
+                            <label class="text-black" for="">Portfolio Link</label>
+                            <input type="text" class="form-control" name="portfolio_link"
+                                   value="{{data.portfolio_link}}" disabled>
+                        </div>
+                        <div class="col-md-12 mb-3 mb-md-0 mt-2">
+                            <label class="text-black" for="">Gender : </label>
+                            {% if data.gender == 'M' %}
+                            <strong><label>Male</label></strong>
+                            {% endif %}
+
+                            {% if data.gender == 'F' %}
+                            <strong><label>Female</label></strong>
+                            {% endif %}
+
+                            {% if data.gender == 'O' %}
+                            <strong><label>Other</label></strong>
+                            {% endif %}
+                        </div>
+                    </div>
+
+                    <a href="{% url 'edit_profile_job_seeker' %}">
+                        <button type="submit" id="login-page-button" class="genric-btn danger circle">EDIT</button>
+                    </a>
+                </div>
+
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+{% endblock %}

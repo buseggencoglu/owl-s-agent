@@ -13,7 +13,7 @@ Owls Agent Login Page
         <div class="card-header">
             Add CV
         </div>
-        <div class="card-body w-100">
+        <div class="card-body flex-column">
             <form method="POST" enctype="multipart/form-data">
                 {% csrf_token %}
                 {{ form | crispy }}
