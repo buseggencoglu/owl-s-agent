@@ -304,7 +304,7 @@ def add_cv(request, pk=None):
                 cv.cv_img = request.FILES["cv_img"]
 
             cv.save()
-            return redirect('my_profile')
+            return redirect(f'/job_seeker_profile/{request.user.id}')
     context = {
         'form': form,
         'pk': pk
@@ -315,26 +315,19 @@ def add_cv(request, pk=None):
 def delete_cv(request, pk):
     instance = CV.objects.get(pk=pk)
     instance.delete()
-    return redirect('my_profile')
+    return redirect(f'/job_seeker_profile/{request.user.id}')
 
 
-def my_profile(request):
-    context = {}
-    data = Job_Seeker_Profile.objects.get(user=request.user)
-    cvs = CV.objects.filter(owner=data)
-    context['data'] = data
-    context['cvs'] = cvs
-
-    if request.method == 'POST':
-        pass
-
-    return render(request, 'website/my_profile.html', context)
 
 
 def job_seeker_profile(request, pk):
-    context = {}
+    context = {'is_my_profile':pk==request.user.id}
     data = Job_Seeker_Profile.objects.get(user_id=pk)
     context["data"] = data
+
+    cvs = CV.objects.filter(owner=data)
+    context['cvs'] = cvs
+
     return render(request, 'website/job_seeker_profile.html', context)
 
 
