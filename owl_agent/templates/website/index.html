@@ -28,49 +28,16 @@ Owls Agent Home Page
                             <!-- form -->
                             <form method="get" class="search-box">
                                 <div class="input-form">
-
                                     {% render_field filter.form.title class="input-form" %}
-                                </div><br><br><br><br><br>
+                                </div>
                                   <div class="select-form">
                                     {% render_field filter.form.location class="select-form" %}
                                 </div>
-
-<br><br><br><br><br>
-                                <div class="select-form">
-                                    {% render_field filter.form.company class="select-form" %}
-                                </div>
-<br><br><br><br><br>
-                                  <div class="select-form">
-                                    {% render_field filter.form.type class="select-form" %}
-                                </div>
-
                                 <div class="search-form">
-                                    <button class="btn btn-primary" type="submit">Search</button>
+                                    <button class="btn btn-primary" type="submit">Search...</button>
                                 </div>
-
-
                             </form>
-                            <table class="table table-bordered">
-                                <thead>
-                                <tr>
-                                    <th>title</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {% for Job_Offer in filter.qs %}
-                                <tr>
-                                   <td>{{ Job_Offer.title }}</td>
-                                     <td>{{ Job_Offer.company }}</td>
-                                     <td>{{ Job_Offer.location }}</td>
-                                     <td>{{ Job_Offer.type }}</td>
-                                </tr>
-                                {% empty %}
-                                <tr>
-                                    <td colspan="5">No data</td>
-                                </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>                   
+
                         </div>
                     </div>
                 </div>
