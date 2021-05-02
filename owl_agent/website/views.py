@@ -11,9 +11,6 @@ from .models import Job_Seeker_Profile, Company_Profile, Job_Offer, CV
 from datetime import date
 from django.contrib import messages
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-from .filters import Job_Offer_Filter
-
-
 
 from django.contrib.auth import (
     authenticate,
@@ -41,9 +38,9 @@ def company_required(function):
 # Create your views here.
 # @login_required(login_url='login')
 def home_view(request):
-    job_offer_list = Job_Offer.objects.all()
-    job_offer_filter = Job_Offer_Filter(request.GET, queryset=job_offer_list)
-    return render(request, 'website/index.html',{'filter': job_offer_filter})
+    # job_offer_list = Job_Offer.objects.all()
+    # job_offer_filter = Job_Offer_Filter(request.GET, queryset=job_offer_list) {'filter': job_offer_filter}
+    return render(request, 'website/index.html')
 
 
 def about_view(request):
@@ -67,15 +64,32 @@ def job_listing_view(request):
         location = request.POST['location']
 
         if location != "anywhere":
-            job_offers = Job_Offer.objects.all().filter(title__contains=title,location=location)
+            job_offers = Job_Offer.objects.all().filter(title__contains=title, location=location)
         else:
             job_offers = Job_Offer.objects.all().filter(title__contains=title)
         print(job_offers.count())
+        job_offer_count = job_offers.count()
+        job_offers = create_paginator(request, job_offers)
+        context = {'job_offer': job_offers, 'job_offer_count': job_offer_count}
+    return render(request, template, context)
+
+
+def job_filter_view(request):
+    template = 'website/job_listing.html'
+    context = {}
+
+    if request.method == "POST":
+        categories = request.POST['categories']
+        type = request.POST.getlist('type []')
+        experience = request.POST.getlist('experience []')
+
+        job_offers = Job_Offer.objects.all().filter(categories=categories, type=type, experience=experience)
         job_offers = create_paginator(request, job_offers)
         context = {'job_offer': job_offers}
 
-        # console.log(title)
-        # print(location)
+        print(categories)
+        print(type)
+        print(experience)
     return render(request, template, context)
 
 
@@ -323,10 +337,8 @@ def delete_cv(request, pk):
     return redirect(f'/job_seeker_profile/{request.user.id}')
 
 
-
-
 def job_seeker_profile(request, pk):
-    context = {'is_my_profile':pk==request.user.id}
+    context = {'is_my_profile': pk == request.user.id}
     data = Job_Seeker_Profile.objects.get(user_id=pk)
     context["data"] = data
 
@@ -336,7 +348,7 @@ def job_seeker_profile(request, pk):
     return render(request, 'website/job_seeker_profile.html', context)
 
 
-def edit_profile_job_seeker(request,pk):
+def edit_profile_job_seeker(request, pk):
     context = {}
     data = Job_Seeker_Profile.objects.get(user=pk)
     context["data"] = data
@@ -363,14 +375,13 @@ def company_profile(request, pk):
     profile = Company_Profile.objects.get(user_id=pk)
     job_posts = Job_Offer.objects.filter(company=profile)
     print("****", job_posts)
-    args = {'profile': profile, 'job_posts':job_posts}
+    args = {'profile': profile, 'job_posts': job_posts}
     return render(request, 'website/company_profile.html', args)
 
 
 def edit_profile_company(request, pk):
     template = 'website/edit_profile_company.html'
     company = Company_Profile.objects.filter(user=request.user)[0]
-
 
     if request.method == 'POST':
         image = request.FILES.get('image')
@@ -423,6 +434,7 @@ def admin_dashboard_list(request):
 
     return render(request, 'website/listing.html', {'querySet': querySet, 'listing_jobseeker': listing_jobseeker})
 
+
 def admin_dashboard_job_list(request):
     querySet = Job_Offer.objects.all().order_by()
     querySet = create_paginator(request, querySet)
@@ -454,4 +466,3 @@ def create_paginator(request, list):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
     return posts
-
