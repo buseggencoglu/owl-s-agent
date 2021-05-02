@@ -66,7 +66,10 @@ def job_listing_view(request):
         title = request.POST.get('title')
         location = request.POST['location']
 
-        job_offers = Job_Offer.objects.all().filter(title__contains=title,location=location)
+        if location != "anywhere":
+            job_offers = Job_Offer.objects.all().filter(title__contains=title,location=location)
+        else:
+            job_offers = Job_Offer.objects.all().filter(title__contains=title)
         print(job_offers.count())
         job_offers = create_paginator(request, job_offers)
         context = {'job_offer': job_offers}
