@@ -80,14 +80,16 @@ def job_filter_view(request):
         categories = request.POST['categories']
         type = request.POST.getlist('type []')
         experience = request.POST.getlist('experience []')
+        if categories == "all":
+            job_offers = Job_Offer.objects.all().filter(type__in=type, experience__in=experience)
+        else:
+            job_offers = Job_Offer.objects.all().filter(categories=categories, type__in=type, experience__in=experience)
 
-        job_offers = Job_Offer.objects.all().filter(categories=categories, type=type, experience=experience)
+        job_offer_count = job_offers.count()
         job_offers = create_paginator(request, job_offers)
-        context = {'job_offer': job_offers}
+        context = {'job_offer': job_offers, 'job_offer_count': job_offer_count}
 
-        print(categories)
-        print(type)
-        print(experience)
+
     return render(request, template, context)
 
 
