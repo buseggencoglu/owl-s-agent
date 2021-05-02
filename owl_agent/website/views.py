@@ -91,9 +91,19 @@ def admin_dashboard(request):
     context = {}
     user = request.user
 
+    querySet = Job_Offer.objects.all().order_by()
+    context["querySet"] = create_paginator(request, querySet)
+
     context["companies"] = Company_Profile.objects.filter(user__is_active=False)
 
     return render(request, 'website/dashboard.html', context)
+
+@staff_member_required
+def delete_job_offer(request,pk):
+    job_offers = Job_Offer.objects.get(id=pk)
+    job_offers.delete()
+
+    return HttpResponseRedirect('/dashboard')
 
 
 @staff_member_required
@@ -417,12 +427,6 @@ def admin_dashboard_list(request):
     listing_jobseeker = create_paginator(request, listing_jobseeker)
 
     return render(request, 'website/listing.html', {'querySet': querySet, 'listing_jobseeker': listing_jobseeker})
-
-def admin_dashboard_job_list(request):
-    querySet = Job_Offer.objects.all().order_by()
-    querySet = create_paginator(request, querySet)
-
-    return render(request, 'website/admin_job_listing.html', {'querySet': querySet, 'listing_job_offer': querySet})
 
 
 def admin_delete_companies(request, pk):

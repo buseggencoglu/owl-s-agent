@@ -31,9 +31,9 @@ urlpatterns = [
     path('job/post/', views.post_job, name='post_job'),
     path('job/post/sent', views.job_sent_view, name='job_sent'),
     path('dashboardList/', views.admin_dashboard_list, name='admin_dashboard_list'),
-    path('dashboardJobList/', views.admin_dashboard_job_list, name='admin_dashboard_job_list'),
     path('dashboardList/deleteCompany/<int:pk>', views.admin_delete_companies, name='admin_delete_companies'),
     path('dashboardList/deleteJobSeeker/<int:pk>', views.admin_delete_jobseeker, name='admin_delete_jobseeker'),
     path('job_seeker_profile/<int:pk>', views.job_seeker_profile, name='job_seeker_profile'),
     path('edit_profile_job_seeker/<int:pk>', views.edit_profile_job_seeker, name='edit_profile_job_seeker'),
+    path('dashboard/delete/<int:pk>', views.delete_job_offer, name='delete_job_offer')
 ]

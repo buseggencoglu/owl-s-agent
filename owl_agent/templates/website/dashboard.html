@@ -1,40 +1,113 @@
 {% extends 'website/base.html' %}
 {% block title %}
-Owls Agent Admin Dashboard
+    Owls Agent Admin Dashboard
 {% endblock %}
 
 {% load static %}
 {% block content %}
 
-  <h4 class="mt-3" style="font-family:'Times New Roman'; color: #4e555b">Waited Companies List</h4>
-                <div class="cd-appr-table table rounded " style="border: 2px darkslategrey solid; width: 50%">
-                    <table class="col align-self-center">
-                        <thead>
-                        <th>Company</th>
-                        <th>Tax ID</th>
-                        <th class="text-center" colspan="2">Approval</th>
-                        </thead>
+    <div class="ml-3">
 
-                        {% for i in companies %}
-                            <tr>
-                                <td>{{ i.user.username }}</td>
+        <h4 class="mt-3" style="font-family:'Times New Roman'; color: #4e555b">Waited Companies List</h4>
+        <div class="cd-appr-table table rounded " style="border: 2px darkslategrey solid; width: 50%">
+            <table class="col align-self-center">
+                <thead>
+                <th>Company</th>
+                <th>Tax ID</th>
+                <th class="text-center" colspan="2">Approval</th>
+                </thead>
 
-                                  <td>{{ i.tax_id }}</td>
+                {% for i in companies %}
+                    <tr>
+                        <td>{{ i.user.username }}</td>
 
-                                <td class="text-center">
-                                    <a href="/dashboard/approve/{{ i.id }}">
-                                        <button type="submit" class="btn btn-success">Approve</button>
-                                    </a>
+                        <td>{{ i.tax_id }}</td>
 
-                                <a href="/dashboard/reject/{{ i.id }}">
-                                    <button type="button" class="btn btn-danger">Reject</button>
-                                </a>
-                            </td>
+                        <td class="text-center">
+                            <a href="/dashboard/approve/{{ i.id }}">
+                                <button type="submit" class="btn btn-success">Approve</button>
+                            </a>
 
-                            </tr>
-                        {% endfor %}
-                    </table>
+                            <a href="/dashboard/reject/{{ i.id }}">
+                                <button type="button" class="btn btn-danger">Reject</button>
+                            </a>
+                        </td>
 
+                    </tr>
+                {% endfor %}
+            </table>
+
+        </div>
+
+
+        <div class="w-100">
+
+            <div class="w-100 pr-4">
+                <button type="button" class="collapsible w-100">List Of Job Posting</button>
+            </div>
+
+            <table class="w-100">
+                <tr>
+                    <th>Categories</th>
+                    <br><br>
+                    <th>Title</th>
+                    <!--<th>Description</th>-->
+                    <th>Start Date</th>
+                    <th>Post Date</th>
+                    <th>Type</th>
+                    <th>Location</th>
+                    <!--<th>Work Level</th>-->
+                    <th>Experience</th>
+                    <th>Salary</th>
+                    <th>Company</th>
+
+                </tr>
+
+                {% for x in querySet %}
+
+                    <tr>
+                        <td>{{ x.categories }}</td>
+                        <td>{{ x.title }}</td>
+                        <!--<td>{{ x.description}}</td>-->
+                        <td>{{ x.start_date }}</td>
+                        <td>{{ x.post_date }}</td>
+                        <td>{{ x.type }}</td>
+                        <td>{{ x.location }}</td>
+                        <!--<td>{{ x.work_level}}</td>-->
+                        <td>{{ x.experience }}</td>
+                        <td>{{ x.salary }}</td>
+                        <td>{{ x.company }}</td>
+                        <td class="text-center"><a href="/dashboard/delete/{{ x.id }}">
+                            <button type="button" class="btn btn-danger">Delete</button>
+                        </a>
+                        </td>
+
+
+                    </tr>
+                {% endfor %}
+
+            </table>
+
+            <table>
+                <div id="more-div-1">
+                    {% if querySet.has_previous %}
+                        <button id="more-button-1" class="btn btn-warning"><a class="infinite-more-link"
+                                                                              href="?page={{ querySet.previous_page_number }}"
+                                                                              style="color: white">Previous</a>
+                        </button>
+                    {% endif %}
+
+                    {% if querySet.has_next %}
+                        <button id="more-button" class="btn btn-warning "><a class="infinite-more-link "
+                                                                             href="?page={{ querySet.next_page_number }}"
+                                                                             style="color: white">Next</a>
+                        </button>
+                    {% endif %}
                 </div>
+
+
+            </table>
+        </div>
+    </div>
 
 {% endblock %}
