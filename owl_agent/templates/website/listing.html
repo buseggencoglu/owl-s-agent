@@ -5,19 +5,28 @@
 
 {% load static %}
 {% block content %}
-    <center>
-        <br><br>
-        <button type="button" class="collapsible">List Of Companies</button>
+<div class="container h-75">
+                    <div class="row">
+                        <div class="col-lg-12 text-center">
+                    <h4 class="mt-3" style="font-family:'Times New Roman'; color: #4e555b">List Of Companies</h4>
 
 
-            <table>
-                <tr>
+
+
+
+                <div class="cd-appr-table table rounded " style="border: 2px darkslategrey solid;">
+                   <table class="table">
+                       <thead class="thead-dark">
+
                     <th>Company Name</th>
                     <th>Tax Id</th>
                     <th>Website</th>
                     <th>Foundation Year</th>
+                    <th>Action</th>
 
-                </tr>
+
+
+                </thead>
                 {% for x in querySet %}
 
                     <tr>
@@ -34,9 +43,12 @@
                     </tr>
                 {% endfor %}
             </table>
+
             <br><br>
              <div>
              <div>
+              </div>
+ </div>
             <div id="more-div-2">
                 {% if querySet.has_previous %}
                     <button id="more-button-1" class="btn btn-warning"><a class="infinite-more-link"
@@ -56,25 +68,28 @@
 
 
 
-            </table>
 
 
-    </center>
-    <br>
-    <br>
-    <center>
-        <br><br>
+
+<div class="row">
+                        <div class="col-lg-12 text-center">
+                    <h4 class="mt-3" style="font-family:'Times New Roman'; color: #4e555b">List Of Job Seekers</h4>
 
 
-        <button type="button" class="collapsible">List Of Job Seekers</button>
 
-            <table>
+
+
+                <div class="cd-appr-table table rounded " style="border: 2px darkslategrey solid;">
+                   <table class="table">
+                       <thead class="thead-dark">
+
                 <tr>
                     <th>Name</th>
                     <th>Surname</th>
                     <th>Birth_Date</th>
                     <th>Carrier List</th>
                     <th>Portfolio Link</th>
+                    <th>Action</th>
                 </tr>
                 {% for y in listing_jobseeker %}
 
@@ -114,7 +129,17 @@
 
 
 
-    </center>
 
-    <br><br>
+</div>
+                </div>
+                        </div>
+</div>
+                        </div>
+                    </div>
+</div>
+
+
+
+
+
 {% endblock %}
