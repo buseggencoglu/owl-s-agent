@@ -12,6 +12,7 @@ from datetime import date
 from django.contrib import messages
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 
+
 from django.contrib.auth import (
     authenticate,
     login,
@@ -38,10 +39,7 @@ def company_required(function):
 # Create your views here.
 # @login_required(login_url='login')
 def home_view(request):
-    # job_offer_list = Job_Offer.objects.all()
-    # job_offer_filter = Job_Offer_Filter(request.GET, queryset=job_offer_list) {'filter': job_offer_filter}
     return render(request, 'website/index.html')
-
 
 def about_view(request):
     return render(request, 'website/about.html')
@@ -109,7 +107,8 @@ def elements_view(request):
 def admin_dashboard(request):
     context = {}
     user = request.user
-
+    querySet = Job_Offer.objects.all().order_by()
+    context["querySet"] = create_paginator(request, querySet)
     context["companies"] = Company_Profile.objects.filter(user__is_active=False)
 
     return render(request, 'website/dashboard.html', context)
@@ -371,6 +370,14 @@ def edit_profile_job_seeker(request, pk):
         return render(request, 'website/edit_profile_job_seeker.html', context)
 
 
+@staff_member_required
+def delete_job_offer(request, pk):
+    job_offers = Job_Offer.objects.get(id=pk)
+    job_offers.delete()
+
+    return HttpResponseRedirect('/dashboard')
+
+
 def company_profile(request, pk):
     profile = Company_Profile.objects.get(user_id=pk)
     job_posts = Job_Offer.objects.filter(company=profile)
@@ -434,7 +441,7 @@ def admin_dashboard_list(request):
 
     return render(request, 'website/listing.html', {'querySet': querySet, 'listing_jobseeker': listing_jobseeker})
 
-
+  
 def admin_dashboard_job_list(request):
     querySet = Job_Offer.objects.all().order_by()
     querySet = create_paginator(request, querySet)
