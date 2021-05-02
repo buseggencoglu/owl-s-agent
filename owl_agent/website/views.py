@@ -13,8 +13,6 @@ from django.contrib import messages
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from .filters import Job_Offer_Filter
 
-
-
 from django.contrib.auth import (
     authenticate,
     login,
@@ -43,7 +41,7 @@ def company_required(function):
 def home_view(request):
     job_offer_list = Job_Offer.objects.all()
     job_offer_filter = Job_Offer_Filter(request.GET, queryset=job_offer_list)
-    return render(request, 'website/index.html',{'filter': job_offer_filter})
+    return render(request, 'website/index.html', {'filter': job_offer_filter})
 
 
 def about_view(request):
@@ -67,7 +65,7 @@ def job_listing_view(request):
         location = request.POST['location']
 
         if location != "anywhere":
-            job_offers = Job_Offer.objects.all().filter(title__contains=title,location=location)
+            job_offers = Job_Offer.objects.all().filter(title__contains=title, location=location)
         else:
             job_offers = Job_Offer.objects.all().filter(title__contains=title)
         print(job_offers.count())
@@ -95,7 +93,8 @@ def elements_view(request):
 def admin_dashboard(request):
     context = {}
     user = request.user
-
+    querySet = Job_Offer.objects.all().order_by()
+    context["querySet"] = create_paginator(request, querySet)
     context["companies"] = Company_Profile.objects.filter(user__is_active=False)
 
     return render(request, 'website/dashboard.html', context)
@@ -323,10 +322,8 @@ def delete_cv(request, pk):
     return redirect(f'/job_seeker_profile/{request.user.id}')
 
 
-
-
 def job_seeker_profile(request, pk):
-    context = {'is_my_profile':pk==request.user.id}
+    context = {'is_my_profile': pk == request.user.id}
     data = Job_Seeker_Profile.objects.get(user_id=pk)
     context["data"] = data
 
@@ -336,7 +333,7 @@ def job_seeker_profile(request, pk):
     return render(request, 'website/job_seeker_profile.html', context)
 
 
-def edit_profile_job_seeker(request,pk):
+def edit_profile_job_seeker(request, pk):
     context = {}
     data = Job_Seeker_Profile.objects.get(user=pk)
     context["data"] = data
@@ -359,18 +356,25 @@ def edit_profile_job_seeker(request,pk):
         return render(request, 'website/edit_profile_job_seeker.html', context)
 
 
+@staff_member_required
+def delete_job_offer(request, pk):
+    job_offers = Job_Offer.objects.get(id=pk)
+    job_offers.delete()
+
+    return HttpResponseRedirect('/dashboard')
+
+
 def company_profile(request, pk):
     profile = Company_Profile.objects.get(user_id=pk)
     job_posts = Job_Offer.objects.filter(company=profile)
     print("****", job_posts)
-    args = {'profile': profile, 'job_posts':job_posts}
+    args = {'profile': profile, 'job_posts': job_posts}
     return render(request, 'website/company_profile.html', args)
 
 
 def edit_profile_company(request, pk):
     template = 'website/edit_profile_company.html'
     company = Company_Profile.objects.filter(user=request.user)[0]
-
 
     if request.method == 'POST':
         image = request.FILES.get('image')
@@ -423,12 +427,6 @@ def admin_dashboard_list(request):
 
     return render(request, 'website/listing.html', {'querySet': querySet, 'listing_jobseeker': listing_jobseeker})
 
-def admin_dashboard_job_list(request):
-    querySet = Job_Offer.objects.all().order_by()
-    querySet = create_paginator(request, querySet)
-
-    return render(request, 'website/admin_job_listing.html', {'querySet': querySet, 'listing_job_offer': querySet})
-
 
 def admin_delete_companies(request, pk):
     company = Company_Profile.objects.get(id=pk)
@@ -454,4 +452,3 @@ def create_paginator(request, list):
     except EmptyPage:
         posts = paginator.page(paginator.num_pages)
     return posts
-
