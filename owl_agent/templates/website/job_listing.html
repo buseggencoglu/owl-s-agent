@@ -161,7 +161,7 @@ Owls Agent Job Listing Page
                                     </div>
                                     <div class="job-tittle job-tittle2">
                                         <a href="#">
-                                            <h4>{{ job.title }}</h4>
+                                            <h4><a href="{% url 'job-details' pk=job.id  %}">{{ job.title }}</a> </h4>
                                         </a>
                                         <ul>
                                             <li>{{ job.company.company_name }}</li>
@@ -173,7 +173,7 @@ Owls Agent Job Listing Page
                                     </div>
                                 </div>
                                 <div class="items-link items-link2 f-right">
-                                    <a href="{% url 'job-details' %}">View Detail</a>
+                                    <a href="{% url 'job-details' pk=job.id  %}">View Detail</a>
                                 </div>
                             </div>
                             {% endfor %}

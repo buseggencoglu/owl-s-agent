@@ -14,7 +14,7 @@ Owls Agent Job Details Page
                 <div class="row">
                     <div class="col-xl-12">
                         <div class="hero-cap text-center">
-                            <h2>{{job_offer.type}}</h2>
+                            <h2>{{job_offer.title}}</h2>
                         </div>
                     </div>
                 </div>
@@ -44,9 +44,10 @@ Owls Agent Job Details Page
                                     <h4>{{job_offer.title}}</h4>
                                 </a>
                                 <ul>
-                                    <li>{{job_offer.company.company_name}}</li>
+                                    <li><a href="{% url 'company_profile' pk=job_offer.company.user_id %}" style="color:black"> {{job_offer.company.company_name}}</a></li>
                                     <li><i class="fas fa-map-marker-alt"></i>{{job_offer.location}}</li>
                                     <li>${{job_offer.salary}}</li>
+                                    <li>{{ job_offer.get_experience_display }}</li>
                                 </ul>
                             </div>
                         </div>
@@ -92,7 +93,7 @@ Owls Agent Job Details Page
                         <ul>
                             <li>Posted date : <span>{{job_offer.post_date}}</span></li>
                             <li>Location : <span>{{job_offer.location}}</span></li>
-                            <li>Vacancy : <span>{{job_offer.post_date}}????</span></li>
+                            <!-- <li>Vacancy : <span>{{job_offer.post_date}}????</span></li> -->
                             <li>Job nature : <span>{{job_offer.type}}</span></li>
                             <li>Salary : <span>{{job_offer.salary}}</span></li>
                             <li>Application date : <span>{{job_offer.start_date}}</span></li>
@@ -106,7 +107,7 @@ Owls Agent Job Details Page
                         <div class="small-section-tittle">
                             <h4>Company Information</h4>
                         </div>
-                        <span><h3 style="color:grey">{{job_offer.company.company_name}}</h3></span>
+                        <span><h3 style="color:grey"><a href="{% url 'company_profile' pk=job_offer.company.user_id %}"> {{job_offer.company.company_name}}</a></h3></span>
 
                         <ul>
                             <li>Name: <span>{{job_offer.company}}</span></li>

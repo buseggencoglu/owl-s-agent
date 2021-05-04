@@ -74,7 +74,7 @@ Owls Agent Admin Dashboard
 
                     <tr>
                         <td>{{ x.categories }}</td>
-                        <td>{{ x.title }}</td>
+                        <td><a href="{% url 'job-details' pk=x.id %}" style="color:black">{{ x.title }}</a></td>
 {#                        <td>{{ x.descriptions }}</td>#}
                         <td>{{ x.start_date }}</td>
                         <td>{{ x.post_date }}</td>
