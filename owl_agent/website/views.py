@@ -383,7 +383,6 @@ def delete_job_offer(request, pk):
 def company_profile(request, pk):
     profile = Company_Profile.objects.get(user_id=pk)
     job_posts = Job_Offer.objects.filter(company=profile)
-    print("****", job_posts)
     args = {'profile': profile, 'job_posts': job_posts}
     return render(request, 'website/company_profile.html', args)
 
