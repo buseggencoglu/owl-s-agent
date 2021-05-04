@@ -45,22 +45,21 @@ Owls Agent Login Page
                             <div class="col-md-12 mb-3 mb-md-0">
                                 <label class="text-black" for="">Carrier List</label>
                                 <input type="text" class="form-control" name="carrier_list"
-                                       value="{{data.carrier_list}}" required>
+                                       value="{{data.carrier_list}}">
                             </div>
                             <div class="col-md-12 mb-3 mb-md-0">
                                 <label class="text-black" for="">Portfolio Link</label>
                                 <input type="text" class="form-control" name="portfolio_link"
-                                       value="{{data.portfolio_link}}" required>
+                                       value="{{data.portfolio_link}}">
                             </div>
                             <div class="col-md-12 mb-3 mb-md-0">
-                                <label class="text-black" for="" >Gender : </label>
-                                <input type="radio" name="gender" value="M" required>
+                                <label class="text-black" for="">Gender : </label>
                                 <br>
                                 {% if data.gender == 'M' %}
                                 <input type="radio" name="gender" value="M" checked>
                                 <strong><label>Male</label></strong>
                                 {% else %}
-                                <input type="radio" name="gender" id="male" value="M">
+                                <input type="radio" name="gender" id="male" value="M" required>
                                 <label>Male</label>
                                 {% endif %}
 
