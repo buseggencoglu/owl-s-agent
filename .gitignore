@@ -104,3 +104,7 @@ GitHub.sublime-settings
 !.vscode/launch.json 
 !.vscode/extensions.json 
 .history
+
+_migrations/*
+!_migrations/__init__.py
+owl_agent/website/migrations/

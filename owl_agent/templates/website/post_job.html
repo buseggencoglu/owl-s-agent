@@ -22,23 +22,39 @@ Job Post
                 <div class="card-body">
                     <form method="POST" action="">
                         {% csrf_token %}
+
+                        <div class="input-group mb-3">
+                            <div class="input-group-append">
+                                <span class="input-group-text"><i class="fas fa-clipboard"></i></span>
+                            </div>
+                                <select class="form-control" id="categories" name="categories" required>
+                                  <option value="design">Design & Creative</option>
+                                    <option value="design_development">Design & Development</option>
+                                  <option value="sales_marketing">Sales & Marketing</option>
+                                    <option value="mobile_app">Mobile Application</option>
+                                    <option value="construction">Construction</option>
+                                    <option value="it">Information Technology</option>
+                                    <option value="real_estate">Real Estate</option>
+                                    <option value="content_writer">Content Writer</option>
+                                </select>
+                        </div>
                         <div class="input-group mb-3">
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-sticky-note"></i></span>
                             </div>
-                            <input type="text" name="title" placeholder="Title" class="form-control">
+                            <input type="text" name="title" placeholder="Title" class="form-control" required>
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-paperclip"></i></span>
                             </div>
-                                <textarea class="form-control" name="description" id="description" rows="3" placeholder="Description"></textarea>
+                                <textarea class="form-control" name="description" id="description" rows="3" placeholder="Description" required></textarea>
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-paperclip"></i></span>
                             </div>
-                            <textarea class="form-control" name="required_skills" id="required_skills" rows="3" placeholder="Required Knowledge, Skills, and Abilities"></textarea>
+                            <textarea class="form-control" name="required_skills" id="required_skills" rows="3" placeholder="Required Knowledge, Skills, and Abilities" required></textarea>
                         </div>
 
 
@@ -47,34 +63,42 @@ Job Post
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-paperclip"></i></span>
                             </div>
-                            <textarea class="form-control" name="education" id="education" rows="3" placeholder="Education + Experience"></textarea>
+                            <textarea class="form-control" name="education" id="education" rows="3" placeholder="Education + Experience" required></textarea>
                         </div>
 
                         <div class="input-group mb-3">
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-location-arrow"></i></span>
                             </div>
-                            <input type="text" name="location" placeholder="Location" class="form-control">
+                                <select class="form-control" id="location" name="location" required>
+                                  <option value="istanbul">İstanbul</option>
+                                  <option value="ankara">Ankara</option>
+                                  <option value="izmir">İzmir</option>
+                                  <option value="bursa">Bursa</option>
+                                </select>
                         </div>
                         <div class="input-group mb-3">
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-clipboard"></i></span>
                             </div>
-                                <select class="form-control" id="type" name="type">
-                                  <option value="Full Time">Full Time</option>
-                                  <option value="Part Time">Part Time</option>
-                                  <option value="Remote">Remote</option>
-                                  <option value="Internship">Internship</option>
+                                <select class="form-control" id="type" name="type" required>
+                                  <option value="full_time">Full Time</option>
+                                  <option value="part_time">Part Time</option>
+                                  <option value="remote">Remote</option>
+                                  <option value="intern">Internship</option>
                                 </select>
                         </div>
 
-                           <div class="input-group mb-3">
+                                   <div class="input-group mb-3">
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-clipboard"></i></span>
                             </div>
-                                <select class="form-control" id="is_experience" name="is_experience">
-                                  <option value="true">Experienced</option>
-                                  <option value="false">Not Important</option>
+                                <select class="form-control" id="experience" name="experience" required>
+                                  <option value="0_years">No experience</option>
+                                    <option value="1_2_years">1-2 years</option>
+                                  <option value="2_3_years">2-3 years</option>
+                                    <option value="3_6_years">3-6 years</option>
+                                    <option value="6_more_years">6-more years</option>
                                 </select>
                         </div>
 
@@ -88,7 +112,7 @@ Job Post
                             <div class="input-group-append">
                                 <span class="input-group-text"><i class="fas fa-calendar"></i></span>
                             </div>
-                            <input type="date" name="start_date" placeholder="Start Date" class="form-control" min="2021" max="2030">
+                            <input type="date" name="start_date" placeholder="Start Date" class="form-control" min="2021" max="2030" required>
                         </div>
 
 
