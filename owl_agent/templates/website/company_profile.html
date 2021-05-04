@@ -131,7 +131,7 @@ Profile
             </th>
             {% endif %}
 
-            </thead>
+
             {% for job_post in job_posts%}
 
             <tr>
@@ -149,20 +149,21 @@ Profile
                 {% if profile.user == user %}
                 <td>
                     <a href="">
-                        <button type="submit" class="btn btn-info">Update</button>
+                        <button type="button" class="genric-btn info-border circle" style="height:50px"><i
+                                class="fa fa-repeat"></i></button>
                     </a>
                 </td>
                 <td>
                     <a href="">
-                        <button type="button" class="btn btn-danger">Delete</button>
+                        <button class="genric-btn info-border circle" style="height:50px"><i class="fa fa-trash"></i>
+                        </button>
                     </a>
                 </td>
                 {% endif %}
             </tr>
             {% endfor %}
+            </thead>
         </table>
     </div>
 </div>
-</body>
-</html>
 {% endblock %}
