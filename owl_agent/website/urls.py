@@ -9,7 +9,7 @@ urlpatterns = [
     path('sent/', views.activation_sent_view, name="sent"),
     path('about/', views.about_view, name='about'),
     path('contact/', views.contact_view, name='contact'),
-    path('job-details/', views.job_details_view, name='job-details'),
+    path('job-details/<int:pk>', views.job_details_view, name='job-details'),
     path('job-listing/', views.job_listing_view, name='job-listing'),
 
     path('job-listing/filter', views.job_filter_view, name='job-filter'),

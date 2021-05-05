@@ -49,8 +49,9 @@ def contact_view(request):
     return render(request, 'website/contact.html')
 
 
-def job_details_view(request):
-    return render(request, 'website/job_details.html')
+def job_details_view(request,pk):
+    job_offer = Job_Offer.objects.get(id=pk)
+    return render(request, 'website/job_details.html', {"job_offer":job_offer})
 
 
 def job_listing_view(request):

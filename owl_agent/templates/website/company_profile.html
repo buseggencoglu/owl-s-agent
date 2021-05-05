@@ -135,7 +135,7 @@ Profile
             {% for job_post in job_posts%}
 
             <tr>
-                <td>{{job_post.title}}</td>
+                <td><a href="{% url 'job-details' pk=job_post.id %}" style="color:black">{{job_post.title}}</a> </td>
                 <td>{{job_post.description}}</td>
                 <td>{{job_post.required_skills}}</td>
                 <td>{{job_post.education}}</td>
