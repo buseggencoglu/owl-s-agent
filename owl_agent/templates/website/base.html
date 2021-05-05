@@ -70,6 +70,7 @@
         }
 
 
+
     </style>
 
 </head>
@@ -97,17 +98,17 @@
                                     <ul id="navigation">
                                         <li><a href="{% url 'home' %}">Home</a></li>
 
-                                         {% if user.is_authenticated  %}
-                                            {% if user_type == 'admin' %}
-                                                <li><a href="/dashboard">Dashboard</a></li>
-                                            <li><a href="/dashboardList">Listing</a></li>
-                                                {% elif user_type == 'company' %}
-                                                <li><a href="{% url 'post_job' %}">Post Job </a></li>
-                                                 <li><a href="{% url 'about' %}">About</a></li>
-                                             {% else %}
-                                            <li><a href="{% url 'job-listing' %}">Find a Jobs </a></li>
-                                                 <li><a href="{% url 'about' %}">About</a></li>
-                                             {%endif%}
+                                        {% if user.is_authenticated %}
+                                        {% if user_type == 'admin' %}
+                                        <li><a href="/dashboard">Dashboard</a></li>
+                                        <li><a href="/dashboardList">Listing</a></li>
+                                        {% elif user_type == 'company' %}
+                                        <li><a href="{% url 'post_job' %}">Post Job </a></li>
+                                        <li><a href="{% url 'about' %}">About</a></li>
+                                        {% else %}
+                                        <li><a href="{% url 'job-listing' %}">Find a Jobs </a></li>
+                                        <li><a href="{% url 'about' %}">About</a></li>
+                                        {%endif%}
                                         {% endif %}
 
                                         <li><a href="#">Page</a>
