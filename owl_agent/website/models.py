@@ -71,6 +71,9 @@ class CV(models.Model):
         default=1,
     )
 
+    def __str__(self):
+        return self.name
+
 
 class Job_Offer(models.Model):
     CATEGORIES = (
@@ -120,12 +123,16 @@ class Job_Offer(models.Model):
     salary = models.CharField(max_length=100, blank=True)
     company = models.ForeignKey(Company_Profile, on_delete=models.CASCADE, related_name='%(class)s_company')
 
-#KBR:EKLEDİ
+
+# KBR:EKLEDİ
 class Application(models.Model):
-    # applicant = models.ForeignKey(Job_Seeker_Profile, on_delete=models.CASCADE, related_name='%(class)s_applicant')
-    # employer = models.ForeignKey(Company_Profile, on_delete=models.CASCADE, related_name='%(class)s_employer')
-    # job_offer = models.ForeignKey(Job_Offer, on_delete=models.CASCADE, related_name='%(class)s_job_offer')
-    cv = models.ForeignKey(CV, on_delete=models.CASCADE, related_name='%(class)s_cv')
+    applicant = models.ForeignKey(Job_Seeker_Profile, on_delete=models.CASCADE, related_name='%(class)s_applicant',
+                                  default="")
+    employer = models.ForeignKey(Company_Profile, on_delete=models.CASCADE, related_name='%(class)s_employer',
+                                 default="")
+    job_offer = models.ForeignKey(Job_Offer, on_delete=models.CASCADE, related_name='%(class)s_job_offer',
+                                  default="")
+    cv = models.ForeignKey(CV, on_delete=models.CASCADE, related_name='%(class)s_cv', default="")
     file = models.FileField(null=True)
 
 ## Django have some notification system , we can add Notification Model when we get there.

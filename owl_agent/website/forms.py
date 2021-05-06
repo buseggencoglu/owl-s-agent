@@ -78,11 +78,21 @@ class CVForm(forms.ModelForm):
                                                       'type': 'date'}),
         }
 
-#KBR:EKLEDİ
+
+# KBR:EKLEDİ
 class JobApplyForm(forms.ModelForm):
+    owner = forms.CharField(widget=forms.HiddenInput())
+
+    def __init__(self, *args, job_seeker, **kwargs):
+        super(JobApplyForm, self).__init__(*args, **kwargs)
+        self.fields['cv'].queryset = CV.objects.filter(owner=job_seeker)
+
+        self.fields['cv'].required = False
+        self.fields['file'].required = False
+
     class Meta:
         model = Application
-        fields = '__all__'
+        fields = 'cv', 'file', 'owner'
         labels = {
             "file": "CV (pdf format)"
         }

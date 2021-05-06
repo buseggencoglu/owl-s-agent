@@ -101,7 +101,10 @@ Owls Agent Job Details Page
                         </ul>
                         <div class="apply-btn2">
                             <!-- KBR:EKLEDİ  -->
-                            <a href="{% url 'apply_job' pk=user.id %}" class="btn">Apply Now</a>
+                            {% if user_type == 'job_seeker' %}
+                            <a href="{% url 'apply_job' pk=job_offer.id %}" class="btn">Apply Now</a>
+                            {% endif %}
+
                             <!-- KBR:EKLEDİ  -->
                         </div>
                     </div>

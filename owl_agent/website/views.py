@@ -1,24 +1,20 @@
 import datetime
 
-from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth.decorators import login_required
-from django.core.mail.backends import console
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.models import User
-from .forms import Job_Seeker_RegisterForm, RoleChooseForm, Company_RegisterForm, EditCompanyProfileForm, CVForm, \
-    JobApplyForm
-from .models import Job_Seeker_Profile, Company_Profile, Job_Offer, CV
-from datetime import date
 from django.contrib import messages
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import (
     authenticate,
     login,
     logout,
-    get_user_model,
 )
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect
+
+from .forms import Job_Seeker_RegisterForm, RoleChooseForm, Company_RegisterForm, EditCompanyProfileForm, CVForm, \
+    JobApplyForm
+from .models import Job_Seeker_Profile, Company_Profile, Job_Offer, CV, Application
 
 
 def company_required(function):
@@ -95,22 +91,28 @@ def job_filter_view(request):
         context = {'job_offer': job_offers, 'job_offer_count': job_offer_count}
     return render(request, template, context)
 
-#KBR:EKLEDİ
+
+# KBR:EKLEDİ
 def apply_job_view(request, pk):
     template = 'website/apply_job.html'
-    job_seeker = Job_Seeker_Profile.objects.get(user_id=pk)
-    instance = None
-    form = JobApplyForm(request.POST or None, request.FILES, instance=instance)
+    job_seeker = Job_Seeker_Profile.objects.get(user_id=request.user.id)
+    job_offer = Job_Offer.objects.get(id=pk)
+    company = Company_Profile.objects.get(id=job_offer.company.id)
+    form = JobApplyForm(request.POST or None, request.FILES, job_seeker=job_seeker)
     if form.is_valid():
-        instance = CV.objects.get(pk=pk, job_seeker=job_seeker)
-        instance = form.save()
-        instance.save()
+        if form.cleaned_data['cv'] is not None or form.cleaned_data['file'] is not None:
+            application = Application.objects.create(applicant=job_seeker, employer=company, job_offer=job_offer,
+                                                     cv=form.cleaned_data['cv'], file=form.cleaned_data['file'])
+            application.save()
+            return redirect('/')
         return redirect('/')
     context = {
         'form': form
     }
     return render(request, template, context)
-#KBR:EKLEDİ
+
+
+# KBR:EKLEDİ
 
 def blog_view(request):
     return render(request, 'website/blog.html')
