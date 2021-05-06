@@ -186,29 +186,29 @@ Owls Agent Job Listing Page
     </div>
     <!-- Job List Area End -->
     <!--Pagination Start  -->
-    <div class="pagination-area pb-115 text-center">
-        <div class="container">
-            <div class="row">
-                <div class="col-xl-12">
-                    <div class="single-wrap d-flex justify-content-center">
-                        <nav aria-label="Page navigation example">
-                            <ul class="pagination justify-content-start">
-                                {% if job_offer.has_previous %}
-                                <li class="page-item"><a class="page-link" href="{{ job_offer.previous_page_number }}">Previous</a>
-                                </li>
-                                {% endif %}
-                                {% if job_offer.has_next %}
-                                <li class="page-item"><a class="page-link"
-                                                         href="{{ job_offer.next_page_number }}">Next</a></li>
-                                {% endif %}
+<!--    <div class="pagination-area pb-115 text-center">-->
+<!--        <div class="container">-->
+<!--            <div class="row">-->
+<!--                <div class="col-xl-12">-->
+<!--                    <div class="single-wrap d-flex justify-content-center">-->
+<!--                        <nav aria-label="Page navigation example">-->
+<!--                            <ul class="pagination justify-content-start">-->
+<!--                                {% if job_offer.has_previous %}-->
+<!--                                <li class="page-item"><a class="page-link" href="{{ job_offer.previous_page_number }}">Previous</a>-->
+<!--                                </li>-->
+<!--                                {% endif %}-->
+<!--                                {% if job_offer.has_next %}-->
+<!--                                <li class="page-item"><a class="page-link"-->
+<!--                                                         href="{{ job_offer.next_page_number }}">Next</a></li>-->
+<!--                                {% endif %}-->
 
-                            </ul>
-                        </nav>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+<!--                            </ul>-->
+<!--                        </nav>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
     <!--Pagination End  -->
 <script>
 // Avoid scoping issues by encapsulating code inside anonymous function

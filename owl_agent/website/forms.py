@@ -7,7 +7,7 @@ from django.contrib.auth import (
     login,
     logout,
 )
-from .models import Company_Profile, Job_Seeker_Profile, CV
+from .models import Company_Profile, Job_Seeker_Profile, CV, Application
 
 User = get_user_model()
 
@@ -76,4 +76,13 @@ class CVForm(forms.ModelForm):
         widgets = {
             'graduation_date': forms.DateInput(attrs={'class': 'form-control',
                                                       'type': 'date'}),
+        }
+
+#KBR:EKLEDİ
+class JobApplyForm(forms.ModelForm):
+    class Meta:
+        model = Application
+        fields = '__all__'
+        labels = {
+            "file": "CV (pdf format)"
         }

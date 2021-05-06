@@ -36,7 +36,8 @@ class Job_Seeker_Profile(User_Profile):
     birth_date = models.DateField()
     carrier_list = models.CharField(max_length=2000)
     portfolio_link = models.CharField(max_length=100)
-    image = models.ImageField(upload_to='job_seeker_image', null=True, blank=True, default='job_seeker_image/default.png')
+    image = models.ImageField(upload_to='job_seeker_image', null=True, blank=True,
+                              default='job_seeker_image/default.png')
 
 
 class CV(models.Model):
@@ -69,6 +70,7 @@ class CV(models.Model):
         choices=LICENCES_STATUS_CHOICES,
         default=1,
     )
+
 
 class Job_Offer(models.Model):
     CATEGORIES = (
@@ -118,10 +120,12 @@ class Job_Offer(models.Model):
     salary = models.CharField(max_length=100, blank=True)
     company = models.ForeignKey(Company_Profile, on_delete=models.CASCADE, related_name='%(class)s_company')
 
-
+#KBR:EKLEDİ
 class Application(models.Model):
-    applicant = models.ForeignKey(Job_Seeker_Profile, on_delete=models.CASCADE, related_name='%(class)s_applicant')
-    employer = models.ForeignKey(Company_Profile, on_delete=models.CASCADE, related_name='%(class)s_employer')
-    job_offer = models.ForeignKey(Job_Offer, on_delete=models.CASCADE, related_name='%(class)s_job_offer')
+    # applicant = models.ForeignKey(Job_Seeker_Profile, on_delete=models.CASCADE, related_name='%(class)s_applicant')
+    # employer = models.ForeignKey(Company_Profile, on_delete=models.CASCADE, related_name='%(class)s_employer')
+    # job_offer = models.ForeignKey(Job_Offer, on_delete=models.CASCADE, related_name='%(class)s_job_offer')
+    cv = models.ForeignKey(CV, on_delete=models.CASCADE, related_name='%(class)s_cv')
+    file = models.FileField(null=True)
 
 ## Django have some notification system , we can add Notification Model when we get there.

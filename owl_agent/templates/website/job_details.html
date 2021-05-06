@@ -34,7 +34,7 @@ Owls Agent Job Details Page
                             <div class="company-img company-img-details">
                                 {% if job_offer.company.image %}
                                 <a href="#"><img src="{{job_offer.company.image.url}}" height="150" width="150"
-                                     class="rounded-circle"></a>
+                                                 class="rounded-circle"></a>
 
                                 {% endif %}
 
@@ -44,9 +44,10 @@ Owls Agent Job Details Page
                                     <h4>{{job_offer.title}}</h4>
                                 </a>
                                 <ul>
-                                    <li><a href="{% url 'company_profile' pk=job_offer.company.user_id %}" style="color:black"> {{job_offer.company.company_name}}</a></li>
+                                    <li><a href="{% url 'company_profile' pk=job_offer.company.user_id %}"
+                                           style="color:black"> {{job_offer.company.company_name}}</a></li>
                                     <li><i class="fas fa-map-marker-alt"></i>{{job_offer.location}}</li>
-                                    <li>${{job_offer.salary}}</li>
+                                    <li>{{job_offer.salary}}</li>
                                     <li>{{ job_offer.get_experience_display }}</li>
                                 </ul>
                             </div>
@@ -99,7 +100,9 @@ Owls Agent Job Details Page
                             <li>Application date : <span>{{job_offer.start_date}}</span></li>
                         </ul>
                         <div class="apply-btn2">
-                            <a href="#" class="btn">Apply Now</a>
+                            <!-- KBR:EKLEDİ  -->
+                            <a href="{% url 'apply_job' pk=user.id %}" class="btn">Apply Now</a>
+                            <!-- KBR:EKLEDİ  -->
                         </div>
                     </div>
                     <div class="post-details4  mb-50">
