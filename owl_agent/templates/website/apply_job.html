@@ -17,9 +17,7 @@ Owls Agent Job Details Page
                     <hr>
                     <form action="" method="POST" class="" enctype="multipart/form-data">
                         {% csrf_token %}
-
                         {{ form | crispy }}
-
                         <div class="row form-group" style="margin-left:27%">
                             <div class="col-md-12 ml-1">
                                 <input type="submit" value="Confirm Application"
@@ -28,9 +26,10 @@ Owls Agent Job Details Page
                         </div>
                     </form>
                 </div>
-
-
             </div>
+            {% for message in messages %}
+            <p id="messages" align="center">{{message}}</p>
+            {% endfor %}
         </div>
     </div>
 </main>

@@ -124,7 +124,6 @@ class Job_Offer(models.Model):
     company = models.ForeignKey(Company_Profile, on_delete=models.CASCADE, related_name='%(class)s_company')
 
 
-# KBR:EKLEDİ
 class Application(models.Model):
     applicant = models.ForeignKey(Job_Seeker_Profile, on_delete=models.CASCADE, related_name='%(class)s_applicant',
                                   default="")
@@ -132,7 +131,7 @@ class Application(models.Model):
                                  default="")
     job_offer = models.ForeignKey(Job_Offer, on_delete=models.CASCADE, related_name='%(class)s_job_offer',
                                   default="")
-    cv = models.ForeignKey(CV, on_delete=models.CASCADE, related_name='%(class)s_cv', default="")
-    file = models.FileField(null=True)
+    cv = models.ForeignKey(CV, on_delete=models.CASCADE, related_name='%(class)s_cv', default="", blank=True)
+    file = models.FileField(null=True, blank=True)
 
 ## Django have some notification system , we can add Notification Model when we get there.

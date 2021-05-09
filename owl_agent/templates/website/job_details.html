@@ -99,13 +99,13 @@ Owls Agent Job Details Page
                             <li>Salary : <span>{{job_offer.salary}}</span></li>
                             <li>Application date : <span>{{job_offer.start_date}}</span></li>
                         </ul>
+                        {% for message in messages %}
+                        <p id="messages" align="center">{{message}}</p>
+                        {% endfor %}
                         <div class="apply-btn2">
-                            <!-- KBR:EKLEDİ  -->
                             {% if user_type == 'job_seeker' %}
                             <a href="{% url 'apply_job' pk=job_offer.id %}" class="btn">Apply Now</a>
                             {% endif %}
-
-                            <!-- KBR:EKLEDİ  -->
                         </div>
                     </div>
                     <div class="post-details4  mb-50">
