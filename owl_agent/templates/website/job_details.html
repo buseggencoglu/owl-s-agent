@@ -104,9 +104,14 @@ Owls Agent Job Details Page
                         {% endfor %}
                         <div class="apply-btn2">
                             {% if user_type == 'job_seeker' %}
+                            {% if messages|length %}
+                            <a href="#" class="btn">Applied</a> 
+                            {% else %}
                             <a href="{% url 'apply_job' pk=job_offer.id %}" class="btn">Apply Now</a>
                             {% endif %}
+                            {% endif %}
                         </div>
+
                     </div>
                     <div class="post-details4  mb-50">
                         <!-- Small Section Tittle -->
