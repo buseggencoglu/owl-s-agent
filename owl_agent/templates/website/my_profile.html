@@ -8,14 +8,14 @@ Owls Agent Login Page
 
 <div class="container h-80 w-100">
     <div class="d-flex justify-content-center h-80 w-100">
-      <div class="card p-2 w-25">
-            <div class="card-header" >
+        <div class="card p-2 w-25">
+            <div class="card-header">
                 {{ data.name }} {{ data.surname }}
             </div>
             <div class="card-body">
                 <div class="col-md-12 mb-3 mb-md-0 text-center">
                     {% if data.image %}
-                        <img class="rounded-circle" src="{{data.image.url}}" width="100px" height="100px"/>
+                    <img class="rounded-circle" src="{{data.image.url}}" width="100px" height="100px"/>
                     {% endif %}
                 </div>
                 <div class="row form-group">
@@ -62,18 +62,18 @@ Owls Agent Login Page
                 </div>
             </div>
             <div class="card-body flex-wrap flex-row">
-                {% for cv in cvs  %}
-                    <div class="d-flex flex-column justify-content-center" style="width: 15%;">
-                        <a href="{% url 'add_cv' cv.pk %}">
-                            <i class="fas fa-folder-open" style="color: black"></i>
-                            <span style="color: black">
+                {% for cv in cvs %}
+                <div class="d-flex flex-column justify-content-center" style="width: 15%;">
+                    <a href="{% url 'add_cv' cv.pk %}">
+                        <i class="fas fa-folder-open" style="color: black"></i>
+                        <span style="color: black">
                                 {{ cv.name }}
                             </span>
-                        </a>
-                    </div>
+                    </a>
+                </div>
                 {% endfor %}
                 {% if cvs.length == 0 %}
-                    No CV found. Create new one with <a>Add</a>
+                No CV found. Create new one with <a>Add</a>
                 {% endif %}
             </div>
         </div>
