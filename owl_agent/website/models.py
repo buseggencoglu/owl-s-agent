@@ -132,6 +132,6 @@ class Application(models.Model):
     job_offer = models.ForeignKey(Job_Offer, on_delete=models.CASCADE, related_name='%(class)s_job_offer',
                                   default="")
     cv = models.ForeignKey(CV, on_delete=models.CASCADE, related_name='%(class)s_cv', default="", blank=True)
-    file = models.FileField(null=True, blank=True)
+    file = models.FileField(null=True, blank=True, upload_to="applications/")
 
 ## Django have some notification system , we can add Notification Model when we get there.

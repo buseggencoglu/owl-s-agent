@@ -386,6 +386,10 @@ def job_seeker_profile(request, pk):
     cvs = CV.objects.filter(owner=data)
     context['cvs'] = cvs
 
+
+    applied_jobs = Application.objects.filter(applicant=data)
+    context['applied_jobs'] = applied_jobs
+
     return render(request, 'website/job_seeker_profile.html', context)
 
 
