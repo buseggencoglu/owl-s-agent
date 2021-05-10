@@ -23,7 +23,7 @@ Owls Agent Home Page
                         </div>
                         <!-- Search Box -->
                         <div class="row">
-                            <div class="col-xl-8">
+                            <div class="col-md-8">
                                 <!-- form -->
                                 <form action="{% url 'job-listing' %}" class="search-box" id="title_search" method="POST">
                                     {% csrf_token %}
@@ -41,6 +41,7 @@ Owls Agent Home Page
                                             </select>
                                         </div>
                                     </div>
+
                                     <div class="search-form">
                                          <a href="javascript:{}" onclick="document.getElementById('title_search').submit();">Find job</a>
                                     </div>

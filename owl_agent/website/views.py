@@ -1,24 +1,20 @@
 import datetime
 
-from django.contrib.admin.views.decorators import staff_member_required
-from django.contrib.auth.decorators import login_required
-from django.core.mail.backends import console
-from django.http import HttpResponseRedirect
-from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.models import User
-from .forms import Job_Seeker_RegisterForm, RoleChooseForm, Company_RegisterForm, EditCompanyProfileForm, CVForm
-from .models import Job_Seeker_Profile, Company_Profile, Job_Offer, CV
-from datetime import date
 from django.contrib import messages
-from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
-
-
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import (
     authenticate,
     login,
     logout,
-    get_user_model,
 )
+from django.contrib.auth.models import User
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
+from django.http import HttpResponseRedirect
+from django.shortcuts import render, redirect
+
+from .forms import Job_Seeker_RegisterForm, RoleChooseForm, Company_RegisterForm, EditCompanyProfileForm, CVForm, \
+    JobApplyForm
+from .models import Job_Seeker_Profile, Company_Profile, Job_Offer, CV, Application
 
 
 def company_required(function):
@@ -41,6 +37,7 @@ def company_required(function):
 def home_view(request):
     return render(request, 'website/index.html')
 
+
 def about_view(request):
     return render(request, 'website/about.html')
 
@@ -49,9 +46,17 @@ def contact_view(request):
     return render(request, 'website/contact.html')
 
 
-def job_details_view(request,pk):
+def job_details_view(request, pk):
     job_offer = Job_Offer.objects.get(id=pk)
-    return render(request, 'website/job_details.html', {"job_offer":job_offer})
+    job_seeker = Job_Seeker_Profile.objects.get(user=request.user)
+    applications = Application.objects.filter(applicant=job_seeker)
+    temp = 0
+    for application in applications:
+        if application.job_offer == job_offer:
+            temp += 1
+    if temp > 0:
+        messages.error(request, "You have already applied this job.")
+    return render(request, 'website/job_details.html', {"job_offer": job_offer})
 
 
 def job_listing_view(request):
@@ -68,7 +73,7 @@ def job_listing_view(request):
             job_offers = Job_Offer.objects.all().filter(title__contains=title)
         print(job_offers.count())
         job_offer_count = job_offers.count()
-        job_offers = create_paginator(request, job_offers)
+        # job_offers = create_paginator(request, job_offers)
         context = {'job_offer': job_offers, 'job_offer_count': job_offer_count}
     return render(request, template, context)
 
@@ -82,17 +87,51 @@ def job_filter_view(request):
         type = request.POST.getlist('type []')
         experience = request.POST.getlist('experience []')
         if categories == "all":
-            job_offers = Job_Offer.objects.all().filter(type__in=type) | Job_Offer.objects.all().filter(experience__in=experience)
+            job_offers = Job_Offer.objects.all().filter(type__in=type) | Job_Offer.objects.all().filter(
+                experience__in=experience)
         else:
-            job_offers = Job_Offer.objects.all().filter(categories=categories, type__in=type)| Job_Offer.objects.all().filter(categories=categories,experience__in=experience)
+            job_offers = Job_Offer.objects.all().filter(categories=categories,
+                                                        type__in=type) | Job_Offer.objects.all().filter(
+                categories=categories, experience__in=experience)
 
         job_offer_count = job_offers.count()
-        job_offers = create_paginator(request, job_offers)
+        # job_offers = create_paginator(request, job_offers)
         context = {'job_offer': job_offers, 'job_offer_count': job_offer_count}
-
-
     return render(request, template, context)
 
+
+def apply_job_view(request, pk):
+    template = 'website/apply_job.html'
+    job_seeker = Job_Seeker_Profile.objects.get(user=request.user)
+    job_offer = Job_Offer.objects.get(id=pk)
+    company = Company_Profile.objects.get(id=job_offer.company.id)
+    form = JobApplyForm(request.POST or None, request.FILES, job_seeker=job_seeker)
+    if request.POST:
+        if form.is_valid():
+            if form.cleaned_data['cv'] is not None or form.cleaned_data['file'] is not None:
+                if form.cleaned_data['cv'] is not None and form.cleaned_data['file'] is None:
+                    application = Application.objects.create(applicant=job_seeker, employer=company,
+                                                             job_offer=job_offer,
+                                                             cv=form.cleaned_data['cv'], file=None)
+                elif form.cleaned_data['cv'] is None and form.cleaned_data['file'] is not None:
+                    application = Application.objects.create(applicant=job_seeker, employer=company,
+                                                             job_offer=job_offer,
+                                                             file=form.cleaned_data['file'], cv=None)
+                elif form.cleaned_data['cv'] is not None and form.cleaned_data['file'] is not None:
+                    application = Application.objects.create(applicant=job_seeker, employer=company,
+                                                             job_offer=job_offer,
+                                                             cv=form.cleaned_data['cv'], file=form.cleaned_data['file'])
+                application.save()
+                return redirect('/')  # +
+            messages.error(request, 'You have to choose a cv from the system or upload one.')
+            return redirect(f'/apply_job/{pk}')
+    context = {
+        'form': form
+    }
+    return render(request, template, context)
+
+
+# KBR:EKLEDİ
 
 def blog_view(request):
     return render(request, 'website/blog.html')
@@ -443,7 +482,7 @@ def admin_dashboard_list(request):
 
     return render(request, 'website/listing.html', {'querySet': querySet, 'listing_jobseeker': listing_jobseeker})
 
-  
+
 def admin_dashboard_job_list(request):
     querySet = Job_Offer.objects.all().order_by()
     querySet = create_paginator(request, querySet)

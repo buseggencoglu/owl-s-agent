@@ -107,21 +107,21 @@ Profile
         </div>
 
 
-        <div class="col-sm-3" style="padding-top:70">
+        <div class="col-sm-3" style="padding-top:70px">
             <h6 class="mb-0"><b>{{profile.user.username}}'s Job Posts</b></h6>
         </div>
         <table class="table card mb-3 table-hover table-striped table">
 
             <thead>
             <th>Title</th>
-            <th>Description</th>
-            <th>Required Skill</th>
-            <th>Education</th>
+<!--            <th>Description</th>-->
+<!--            <th>Required Skill</th>-->
+<!--            <th>Education</th>-->
             <th>Start Date</th>
             <th>Post Date</th>
             <th>Type</th>
             <th>Location</th>
-            <th>Work Level</th>
+<!--            <th>Work Level</th>-->
             <th>Experience</th>
             <th>Salary</th>
             {% if profile.user == user %}
@@ -136,14 +136,14 @@ Profile
 
             <tr>
                 <td><a href="{% url 'job-details' pk=job_post.id %}" style="color:black">{{job_post.title}}</a> </td>
-                <td>{{job_post.description}}</td>
-                <td>{{job_post.required_skills}}</td>
-                <td>{{job_post.education}}</td>
+<!--                <td>{{job_post.description}}</td>-->
+<!--                <td>{{job_post.required_skills}}</td>-->
+<!--                <td>{{job_post.education}}</td>-->
                 <td>{{job_post.start_date}}</td>
                 <td>{{job_post.post_date}}</td>
                 <td>{{job_post.type}}</td>
                 <td>{{job_post.location}}</td>
-                <td>{{job_post.work_level}}</td>
+<!--                <td>{{job_post.work_level}}</td>-->
                 <td>{{job_post.experience}}</td>
                 <td>{{job_post.salary}}</td>
                 {% if profile.user == user %}
