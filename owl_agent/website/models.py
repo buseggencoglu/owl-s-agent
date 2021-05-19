@@ -9,9 +9,6 @@ from django.db import models
 class User_Profile(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
 
-    def get_profile_url(self):
-        return "/profile/{}/".format(self.user.username)
-
     def __str__(self):
         return self.user.username
 
@@ -22,6 +19,9 @@ class Company_Profile(User_Profile):
     tax_id = models.IntegerField()
     website = models.CharField(max_length=100)
     foundation_year = models.IntegerField()
+
+    def get_profile_url(self):
+        return "/company_profile/{}".format(self.user.pk)
 
 
 class Job_Seeker_Profile(User_Profile):
@@ -38,6 +38,10 @@ class Job_Seeker_Profile(User_Profile):
     portfolio_link = models.CharField(max_length=100)
     image = models.ImageField(upload_to='job_seeker_image', null=True, blank=True,
                               default='job_seeker_image/default.png')
+
+    def get_profile_url(self):
+        return "/job_seeker_profile/{}".format(self.user.pk)
+
 
 
 class CV(models.Model):
@@ -122,6 +126,12 @@ class Job_Offer(models.Model):
     experience = models.CharField(max_length=100, blank=True, choices=EXPERIENCE)
     salary = models.CharField(max_length=100, blank=True)
     company = models.ForeignKey(Company_Profile, on_delete=models.CASCADE, related_name='%(class)s_company')
+
+    def get_applicants_url(self):
+        return "/job_applicants/{}/".format(self.pk)
+
+    def delete_job_offer_url(self):
+        return "/company_profile/job_offer/delete/{}".format(self.pk)
 
 
 class Application(models.Model):

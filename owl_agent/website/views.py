@@ -46,16 +46,28 @@ def contact_view(request):
     return render(request, 'website/contact.html')
 
 
+@company_required
+def job_applicant_view(request, pk):
+    job_offer = Job_Offer.objects.get(id=pk)
+    applications = Application.objects.filter(job_offer=job_offer)
+    applications = create_paginator(request, applications)
+
+    context = {'applications': applications}
+    return render(request, 'website/job_applicants.html', context)
+
+
 def job_details_view(request, pk):
     job_offer = Job_Offer.objects.get(id=pk)
-    job_seeker = Job_Seeker_Profile.objects.get(user=request.user)
-    applications = Application.objects.filter(applicant=job_seeker)
-    temp = 0
-    for application in applications:
-        if application.job_offer == job_offer:
-            temp += 1
-    if temp > 0:
-        messages.error(request, "You have already applied this job.")
+
+    ## Company olarak details wieve girince patlıyor
+    # job_seeker = Job_Seeker_Profile.objects.get(user=request.user)
+    # applications = Application.objects.filter(applicant=job_seeker)
+    # temp = 0
+    # for application in applications:
+    #     if application.job_offer == job_offer:
+    #         temp += 1
+    # if temp > 0:
+    #     messages.error(request, "You have already applied this job.")
     return render(request, 'website/job_details.html', {"job_offer": job_offer})
 
 
@@ -106,25 +118,31 @@ def apply_job_view(request, pk):
     job_offer = Job_Offer.objects.get(id=pk)
     company = Company_Profile.objects.get(id=job_offer.company.id)
     form = JobApplyForm(request.POST or None, request.FILES, job_seeker=job_seeker)
-    if request.POST:
-        if form.is_valid():
-            if form.cleaned_data['cv'] is not None or form.cleaned_data['file'] is not None:
-                if form.cleaned_data['cv'] is not None and form.cleaned_data['file'] is None:
-                    application = Application.objects.create(applicant=job_seeker, employer=company,
-                                                             job_offer=job_offer,
-                                                             cv=form.cleaned_data['cv'], file=None)
-                elif form.cleaned_data['cv'] is None and form.cleaned_data['file'] is not None:
-                    application = Application.objects.create(applicant=job_seeker, employer=company,
-                                                             job_offer=job_offer,
-                                                             file=form.cleaned_data['file'], cv=None)
-                elif form.cleaned_data['cv'] is not None and form.cleaned_data['file'] is not None:
-                    application = Application.objects.create(applicant=job_seeker, employer=company,
-                                                             job_offer=job_offer,
-                                                             cv=form.cleaned_data['cv'], file=form.cleaned_data['file'])
-                application.save()
-                return redirect('/')  # +
-            messages.error(request, 'You have to choose a cv from the system or upload one.')
-            return redirect(f'/apply_job/{pk}')
+
+    applications = Application.objects.filter(applicant=job_seeker,job_offer = job_offer)
+    if applications.count() > 0:
+        messages.error(request, "You have already applied this job.")
+
+    else:
+        if request.POST:
+            if form.is_valid():
+                if form.cleaned_data['cv'] is not None or form.cleaned_data['file'] is not None:
+                    if form.cleaned_data['cv'] is not None and form.cleaned_data['file'] is None:
+                        application = Application.objects.create(applicant=job_seeker, employer=company,
+                                                                 job_offer=job_offer,
+                                                                 cv=form.cleaned_data['cv'], file=None)
+                    elif form.cleaned_data['cv'] is None and form.cleaned_data['file'] is not None:
+                        application = Application.objects.create(applicant=job_seeker, employer=company,
+                                                                 job_offer=job_offer,
+                                                                 file=form.cleaned_data['file'], cv=None)
+                    elif form.cleaned_data['cv'] is not None and form.cleaned_data['file'] is not None:
+                        application = Application.objects.create(applicant=job_seeker, employer=company,
+                                                                 job_offer=job_offer,
+                                                                 cv=form.cleaned_data['cv'], file=form.cleaned_data['file'])
+                    application.save()
+                    return redirect('/')  # +
+                messages.error(request, 'You have to choose a cv from the system or upload one.')
+                return redirect(f'/apply_job/{pk}')
     context = {
         'form': form
     }
@@ -386,7 +404,6 @@ def job_seeker_profile(request, pk):
     cvs = CV.objects.filter(owner=data)
     context['cvs'] = cvs
 
-
     applied_jobs = Application.objects.filter(applicant=data)
     context['applied_jobs'] = applied_jobs
 
@@ -422,6 +439,14 @@ def delete_job_offer(request, pk):
     job_offers.delete()
 
     return HttpResponseRedirect('/dashboard')
+
+@company_required
+def company_delete_job_offer(request, pk):
+    job_offer = Job_Offer.objects.get(id=pk)
+    if job_offer.company.user == request.user:
+        job_offer.delete()
+
+    return redirect('company_profile',pk = job_offer.company.user.pk)
 
 
 def company_profile(request, pk):
