@@ -424,11 +424,9 @@ def edit_profile_job_seeker(request, pk):
         return render(request, 'website/edit_profile_job_seeker.html', context)
 
 
-@staff_member_required
 def delete_job_offer(request, pk):
     job_offers = Job_Offer.objects.get(id=pk)
     job_offers.delete()
-
     return HttpResponseRedirect('/dashboard')
 
 
@@ -437,9 +435,8 @@ def company_delete_job_offer(request, pk):
     job_offer = Job_Offer.objects.get(id=pk)
     if job_offer.company.user == request.user:
         job_offer.delete()
-
-    return redirect('company_profile', pk=job_offer.company.user.pk)
-
+    return HttpResponseRedirect(f'/company_profile/{job_offer.company.user.pk}')
+    # return redirect('company_delete_job_offer', pk=job_offer.company.user.pk)
 
 def company_profile(request, pk):
     profile = Company_Profile.objects.get(user_id=pk)
@@ -447,6 +444,11 @@ def company_profile(request, pk):
     args = {'profile': profile, 'job_posts': job_posts}
     return render(request, 'website/company_profile.html', args)
 
+def delete_job_company(request, pk):
+    profile = Company_Profile.objects.get(user_id=pk)
+    job_posts = Job_Offer.objects.filter(company=profile)
+    job_posts.delete()
+    return HttpResponseRedirect(f'/company_profile/{request.user.id}')
 
 def edit_profile_company(request, pk):
     template = 'website/edit_profile_company.html'
@@ -494,7 +496,6 @@ def edit_profile_company(request, pk):
         args = {'form': form, 'company': company}
         return render(request, template, args)
 
-
 def admin_dashboard_list(request):
     querySet = Company_Profile.objects.all().order_by()
     querySet = create_paginator(request, querySet)
@@ -514,14 +515,12 @@ def admin_dashboard_job_list(request):
 def admin_delete_companies(request, pk):
     company = Company_Profile.objects.get(id=pk)
     company.user.delete()
-
     return HttpResponseRedirect('/dashboardList')
 
 
 def admin_delete_jobseeker(request, pk):
     company = Job_Seeker_Profile.objects.get(id=pk)
     company.user.delete()
-
     return HttpResponseRedirect('/dashboardList')
 
 
