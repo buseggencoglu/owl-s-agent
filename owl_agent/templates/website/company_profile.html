@@ -133,6 +133,10 @@ Profile
                                 </button>
                             </a>
                         </td>
+                        <td>
+                            <a href="{% url 'job_applicants' pk=job_post.id %} ">
+                                <button type="button" class="btn btn-danger">See Applicants</button>
+                            </a></td>
                         {% endif %}
                     </tr>
                     {% endfor %}

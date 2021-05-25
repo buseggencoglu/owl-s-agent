@@ -13,7 +13,7 @@ urlpatterns = [
     path('job-listing/', views.job_listing_view, name='job-listing'),
     path('job-listing/filter', views.job_filter_view, name='job-filter'),
 
-    #EKLENDİ
+    # EKLENDİ
     path('apply_job/<int:pk>', views.apply_job_view, name='apply_job'),
 
     path('blog/', views.blog_view, name='blog'),
@@ -43,5 +43,6 @@ urlpatterns = [
     path('dashboardList/', views.admin_dashboard_list, name='admin_dashboard_list'),
     path('dashboardList/deleteCompany/<int:pk>', views.admin_delete_companies, name='admin_delete_companies'),
     path('dashboardList/deleteJobSeeker/<int:pk>', views.admin_delete_jobseeker, name='admin_delete_jobseeker'),
+    path('job_applicants/<int:pk>', views.job_applicant_view, name='job_applicants'),
 
 ]
