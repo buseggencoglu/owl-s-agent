@@ -136,10 +136,10 @@ def apply_job_view(request, pk):
                 return redirect('/')  # +
             messages.error(request, 'You have to choose a cv from the system or upload one.')
             return redirect(f'/apply_job/{pk}')
-        context = {
-            'form': form
-        }
-        return render(request, template, context)
+    context = {
+        'form': form
+    }
+    return render(request, template, context)
 
 
 def blog_view(request):
@@ -438,17 +438,20 @@ def company_delete_job_offer(request, pk):
     return HttpResponseRedirect(f'/company_profile/{job_offer.company.user.pk}')
     # return redirect('company_delete_job_offer', pk=job_offer.company.user.pk)
 
+
 def company_profile(request, pk):
     profile = Company_Profile.objects.get(user_id=pk)
     job_posts = Job_Offer.objects.filter(company=profile)
     args = {'profile': profile, 'job_posts': job_posts}
     return render(request, 'website/company_profile.html', args)
 
+
 def delete_job_company(request, pk):
     profile = Company_Profile.objects.get(user_id=pk)
     job_posts = Job_Offer.objects.filter(company=profile)
     job_posts.delete()
     return HttpResponseRedirect(f'/company_profile/{request.user.id}')
+
 
 def edit_profile_company(request, pk):
     template = 'website/edit_profile_company.html'
@@ -495,6 +498,7 @@ def edit_profile_company(request, pk):
         form = EditCompanyProfileForm()
         args = {'form': form, 'company': company}
         return render(request, template, args)
+
 
 def admin_dashboard_list(request):
     querySet = Company_Profile.objects.all().order_by()
